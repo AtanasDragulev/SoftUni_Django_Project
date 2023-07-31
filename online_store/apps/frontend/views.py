@@ -6,7 +6,7 @@ from django.views.generic import DeleteView, FormView
 from django.views.generic.base import TemplateView
 
 from .forms import ProductCreationForm, ProductForm, ProductAttributeFormSet, SearchForm
-from ..accounts.access_control import AccessRequiredMixin, group_required
+from online_store.tools.access_control import AccessRequiredMixin, group_required
 
 from ..core.models import Category, Product, ProductAttribute
 

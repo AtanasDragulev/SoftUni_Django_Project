@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 
 from django.views import generic as views
 
+from online_store.tools.access_control import AccessRequiredMixin, group_required
 from online_store.apps.backoffice.forms import DeliveryForm, InventoryForm
 from online_store.apps.core.models import Product, Category
 from online_store.apps.inventory.models import Delivery
@@ -14,17 +15,20 @@ UserModel = get_user_model()
 
 
 # Create your views here.
-class Dashboard(views.TemplateView):
+class Dashboard(AccessRequiredMixin, views.TemplateView):
+    REQUIRED_GROUP = "Staff"
     template_name = 'backoffice/dashboard.html'
 
 
-class CreateDelivery(views.CreateView):
+class CreateDelivery(AccessRequiredMixin, views.CreateView):
+    REQUIRED_GROUP = "Staff"
     model = Delivery
     template_name = 'backoffice/create_delivery.html'
     success_url = reverse_lazy('dashboard')
     fields = '__all__'
 
 
+@group_required("Staff")
 def create_delivery_view(request):
     if request.method == 'POST':
         delivery_form = DeliveryForm(request.POST)
@@ -58,20 +62,23 @@ def create_delivery_view(request):
     })
 
 
-class DeliveryList(views.ListView):
+class DeliveryList(AccessRequiredMixin, views.ListView):
+    REQUIRED_GROUP = "Staff"
     model = Delivery
     paginate_by = 30
     template_name = 'backoffice/delivery_list.html'
     context_object_name = 'objects_list'
 
 
-class UserManagement(views.ListView):
+class UserManagement(AccessRequiredMixin, views.ListView):
+    REQUIRED_GROUP = "Admins"
     model = UserModel
     template_name = 'backoffice/user_management.html'
     paginate_by = 20
 
 
-class UserPermissionsView(views.View):
+class UserPermissionsView(AccessRequiredMixin, views.View):
+    REQUIRED_GROUP = "Admins"
     template_name = 'backoffice/user_permissions.html'
 
     def get(self, request, user_pk):
@@ -91,38 +98,45 @@ class UserPermissionsView(views.View):
         return redirect('manage_users')
 
 
-class CategoryManagementView(views.ListView):
+class CategoryManagementView(AccessRequiredMixin, views.ListView):
+    REQUIRED_GROUP = "Managers"
     model = Category
     template_name = 'backoffice/category_management.html'
 
 
-class CreateCategoryView(views.CreateView):
+class CreateCategoryView(AccessRequiredMixin, views.CreateView):
+    REQUIRED_GROUP = "Managers"
     model = Category
 
 
-class EditCategoryView(views.UpdateView):
+class EditCategoryView(AccessRequiredMixin, views.UpdateView):
+    REQUIRED_GROUP = "Managers"
     model = Category
     fields = ('name', 'parent_category', 'order',)
     template_name = 'backoffice/category_edit.html'
     success_url = reverse_lazy('category_management')
 
 
-class ProductManagementView(views.ListView):
+class ProductManagementView(AccessRequiredMixin, views.ListView):
+    REQUIRED_GROUP = "Staff"
     model = Product
     template_name = 'backoffice/product_management.html'
 
 
-class CreateProductView(views.CreateView):
+class CreateProductView(AccessRequiredMixin, views.CreateView):
+    REQUIRED_GROUP = "Staff"
     model = Product
     fields = '__all__'
     template_name = 'backoffice/product_create.html'
 
 
-class EditProductView(views.UpdateView):
+class EditProductView(AccessRequiredMixin, views.UpdateView):
+    REQUIRED_GROUP = "Staff"
     model = Product
     fields = ('name', 'parent_category', 'order',)
 
 
-class OrderManagementView(views.ListView):
+class OrderManagementView(AccessRequiredMixin, views.ListView):
+    REQUIRED_GROUP = "Staff"
     model = Order
     template_name = 'backoffice/order_management.html'
