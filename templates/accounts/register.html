@@ -1,0 +1,15 @@
+{% extends 'frontend/base.html' %}
+{% block content %}
+    {{ request.user }}
+
+    <form action="{% url 'register_user' %}" method="post">
+        <div class="col border  align-items-center justify-content-center">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button>Register</button>
+            or
+            <a href="{% url 'login_user' %}">Login</a>
+
+        </div>
+    </form>
+{% endblock %}

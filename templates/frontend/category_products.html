@@ -1,0 +1,57 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% block extrahead %}
+    {#    <link rel="stylesheet" href="{% static "CSS/product_cards.css" %}">#}
+{% endblock %}
+{% block content %}
+
+    <div id="content">
+        <div id="sidebar" class="sidebar">
+            {% include 'frontend/sidebar.html' %}
+        </div>
+
+
+        <div id="product">
+
+
+            <h2>{{ category.name }}</h2>
+
+            <a href="{% url 'create_product' category_name=category.name %}">
+                <button type="button" class="btn btn-primary">Create Product</button>
+            </a>
+            <hr>
+            {% for product in products %}
+                <div class="card-box">
+                    <img src="{{ product.image.url }}" alt="Product Image">
+                    <div>
+                        <div class="text-center">
+                            <p class="name">{{ product.title }}</p>
+                            <p class="artist">Brand: {{ product.brand }}</p>
+                            <p class="genre">In stock: {{ product.quantity }}</p>
+                            <p class="price">Price: ${{ product.price }}</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="{% url 'product_details' slug=product.slug %}">Details</a>
+                            <button data-product="{{ product.pk }}" data-action="add" type="button"
+                                    class="btn bg-cart update-cart"><i class="fa fa-cart-plus mr-2"></i> Add to
+                                cart
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+            {% empty %}
+                <h3>No Products</h3>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <script>
+        var csrftoken = '{{ csrf_token }}';
+    </script>
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+{% endblock %}
+
+

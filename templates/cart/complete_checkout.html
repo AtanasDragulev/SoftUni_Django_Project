@@ -1,0 +1,13 @@
+{% extends 'frontend/base.html' %}
+
+{% block content %}
+    <div id="product">
+        {% if status == "success" %}
+            OK
+        {% else %}
+            <h4>FAILED LOW STOCK: {{ item }} quantity is {{ item.quantity }}</h4>
+            <p>Your cart has been updated</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

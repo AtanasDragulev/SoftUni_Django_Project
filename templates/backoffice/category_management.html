@@ -1,0 +1,67 @@
+{% extends 'backoffice/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <style>
+
+        .cart-row {
+            display: flex;
+            align-items: stretch;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ececec;
+        }
+
+        .user-row {
+            display: flex;
+            align-items: stretch;
+            margin-bottom: 1px;
+            border-bottom: 1px solid;
+
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+
+
+{% block content %}
+    <h2>Categories:</h2>
+    <input type="text" id="searchInput" placeholder="Search by name...">
+    <table>
+
+        <div class="cart-row">
+            <div style="flex:2"><strong>NAME</strong></div>
+            <div style="flex:0"><strong>ACTION</strong></div>
+        </div>
+        {% for category in sidebar_categories %}
+            <div class="user-row">
+                <div style="flex:2">{{ category.main_category }}</div>
+                <div style="flex:0"><a href="{% url 'category_edit' pk=category.main_category.pk %}">Edit</a></div>
+            </div>
+            {% for sub_category in category.sub_categories %}
+                <div class="user-row">
+                    <div style="flex:2"><span>---- </span>{{ sub_category.name }}</div>
+                    <div style="flex:0"><a href="{% url 'category_edit' pk=sub_category.pk %}">Edit</a></div>
+                </div>
+            {% endfor %}
+
+
+
+        {% empty %}
+            <h3>No categories</h3>
+        {% endfor %}
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".user-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+{% endblock %}
+

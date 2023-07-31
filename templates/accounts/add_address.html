@@ -1,0 +1,10 @@
+{% extends 'frontend/base.html' %}
+
+{% block content %}
+    <form class="form-control" method="post" action="{% url 'add_address' %}">
+        {{ form.as_div }}
+        <button type="submit" class="btn btn-primary">Save</button>
+        {% csrf_token %}
+    </form>
+
+{% endblock %}

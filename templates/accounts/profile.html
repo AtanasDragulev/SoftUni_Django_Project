@@ -1,0 +1,29 @@
+{% extends 'frontend/base.html' %}
+
+{% block content %}
+
+    <div class="align-items-center justify-content-center">
+        <div>First Name: {{ object.first_name }}</div>
+        <div>Last Name: {{ object.last_name }}</div>
+        <br>
+        <div>
+            <a href="{% url "edit_profile" pk=request.user.pk %}">
+                <button>Edit Profile</button>
+            </a>
+        </div>
+        <br>
+        <h5>Addresses</h5>
+        {% for address in user.address_set.all %}
+            <p>{{ address }}</p> <p><a href="{% url 'delete_adress' pk=address.pk%}">Delete</a></p>
+        {% empty %}
+            <p>No shipping adresses</p>
+        {% endfor %}
+        <div>
+            <a href="{% url "add_address" %}">
+                <button>Add new adress</button>
+            </a>
+        </div>
+
+
+    </div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'backoffice/base.html' %}
+
+{% block extrahead %}
+    <style>
+        .cart-row {
+            display: flex;
+            align-items: stretch;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ececec;
+
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+
+
+{% block content %}
+    <h2>Orders:</h2>
+    <input type="text" id="searchInput" placeholder="Search">
+    <table>
+
+        <div class="cart-row">
+            <div style="flex:1"><strong>ORDER ID</strong></div>
+            <div style="flex:2"><strong>ORDER DATE</strong></div>
+            <div style="flex:1"><strong>COMPLETED</strong></div>
+            <div style="flex:1"><strong>PAYMENT_TYPE</strong></div>
+            <div style="flex:1"><strong>AMMOUNT</strong></div>
+            <div style="flex:1"><strong>ACTION</strong></div>
+        </div>
+        {% for order in object_list %}
+            <div class="cart-row user-row">
+                <div style="flex:1"><p>{{ order.id }}</p></div>
+                <div style="flex:2"><p>{{ order.date_ordered }}</p></div>
+                <div style="flex:1"><p>{{ order.complete }}</p></div>
+                <div style="flex:1"><p>{{ order.payment_type }}</p></div>
+                <div style="flex:1"><p>{{ order.get_total }}</p></div>
+                <div style="flex:1"><p>process</p></div>
+
+            </div>
+        {% empty %}
+            <h3>No orders</h3>
+        {% endfor %}
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".user-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+{% endblock %}

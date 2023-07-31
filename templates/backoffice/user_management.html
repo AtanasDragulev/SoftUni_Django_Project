@@ -1,0 +1,53 @@
+{% extends 'backoffice/base.html' %}
+
+{% block extrahead %}
+    <style>
+        .cart-row {
+            display: flex;
+            align-items: stretch;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ececec;
+
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+
+
+{% block content %}
+    <h2>Users:</h2>
+    <input type="text" id="searchInput" placeholder="Search by email...">
+    <table>
+
+        <div class="cart-row">
+            <div style="flex:2"><strong>EMAIL</strong></div>
+            <div style="flex:1"><strong>FIRST NAME</strong></div>
+            <div style="flex:1"><strong>LAST NAME</strong></div>
+            <div style="flex:1"><strong>Last Login</strong></div>
+        </div>
+        {% for user in object_list %}
+            <div class="cart-row user-row">
+                <div style="flex:2"><p>{{ user.email }}</p></div>
+                <div style="flex:1"><p>{{ user.profile.first_name }}</p></div>
+                <div style="flex:1"><p>{{ user.profile.last_name }}</p></div>
+                <div style="flex:1"><p>{{ user.last_login }}</p></div>
+                <a href="{% url 'user_permissions' user_pk=user.pk %}">Permisions</a>
+            </div>
+        {% empty %}
+            <h3>No users</h3>
+        {% endfor %}
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".user-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+{% endblock %}

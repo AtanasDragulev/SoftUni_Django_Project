@@ -1,0 +1,13 @@
+{% extends 'frontend/base.html' %}
+
+{% block content %}
+    <form class="form-control" method="post" action="{% url 'delete_adress' address.pk %}">
+        <h3>Do you want to delete address: <br>{{ address }}</h3>
+
+        <a href="{% url 'profile_details' pk=user.pk %}" class="btn btn-secondary">Cancel</a>
+
+        <button type="submit" class="btn btn-danger">Delete</button>
+        {% csrf_token %}
+    </form>
+
+{% endblock %}

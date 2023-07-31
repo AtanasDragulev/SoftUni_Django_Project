@@ -1,0 +1,30 @@
+<div>
+    <!-- Main categories -->
+    {% for category in sidebar_categories %}
+        <div class="category">
+            <h3>{{ category.main_category.name }}</h3>
+            <ul>
+                {% for sub_category in category.sub_categories %}
+                    <li class="sub-categories"><a href="{% url 'category_products' sub_category.name %}">{{ sub_category.name }}</a></li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    {% endfor %}
+</div>
+
+
+<!-- Your existing script tags -->
+
+<script>
+    // JavaScript for collapsing/expanding the main categories
+    const categories = document.querySelectorAll('.category');
+    categories.forEach(category => {
+        const title = category.querySelector('h3');
+        const list = category.querySelector('ul');
+
+        title.addEventListener('click', () => {
+            category.classList.toggle('collapsed');
+        });
+    });
+</script>

@@ -1,0 +1,11 @@
+{% extends 'frontend/base.html' %}
+
+{% block content %}
+    <form action="{% url 'edit_profile' pk=user.pk %}" method="post">
+        <div class="col border  align-items-center justify-content-center">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button>Save</button>
+        </div>
+    </form>
+{% endblock %}

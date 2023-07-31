@@ -1,0 +1,39 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% block content %}
+    {% load custom_filters %}
+
+    <img src="{{ product.image.url }}" alt="product image">
+    <h1>{{ product.title }}</h1>
+    <p>Brand: {{ product.brand }}</p>
+    <p>Category: {{ product.category }}</p>
+    <p>Price: ${{ product.price }}</p>
+
+
+    {% if attributes %}
+        <h2>Attributes</h2>
+        <ul>
+            {% for attribute in attributes %}
+                <li>{{ attribute.name }}: {{ attribute.value }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <p>Description: {{ product.description }}</p>
+    {% if request.user|in_group:'Staff' %}
+        <a href="{% url 'edit_product' product.slug %}">
+            <button>Edit Product</button>
+        </a>
+        <a href="{% url 'delete_product' product.slug %}">
+            <button>Delete Product</button>
+        </a>
+    {% endif %}
+
+    <script>
+        var csrftoken = '{{ csrf_token }}';
+    </script>
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+
+
+{% endblock %}

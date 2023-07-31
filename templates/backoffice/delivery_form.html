@@ -1,0 +1,10 @@
+<form method="post">
+  {% csrf_token %}
+  {{ formset.management_form }}
+  <table>
+    {% for form in formset %}
+      {{ form.as_table }}
+    {% endfor %}
+  </table>
+  <input type="submit" value="Create Delivery">
+</form>

@@ -1,0 +1,55 @@
+{% extends 'backoffice/base.html' %}
+
+{% block extrahead %}
+    <style>
+        .cart-row {
+            display: flex;
+            align-items: stretch;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ececec;
+
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+
+
+{% block content %}
+    <h2>Products:</h2>
+    <input type="text" id="searchInput" placeholder="Search">
+    <table>
+
+        <div class="cart-row">
+            <div style="flex:1"><strong>BRAND</strong></div>
+            <div style="flex:2"><strong>NAME</strong></div>
+            <div style="flex:1"><strong>PRICE</strong></div>
+            <div style="flex:1"><strong>QUANTITY</strong></div>
+            <div style="flex:1"><strong>ACTION</strong></div>
+        </div>
+        {% for product in object_list %}
+            <div class="cart-row user-row">
+                <div style="flex:1"><p>{{ product.brand }}</p></div>
+                <div style="flex:2"><p>{{ product.name }}</p></div>
+                <div style="flex:1"><p>{{ product.price }}</p></div>
+                <div style="flex:1"><p>{{ product.quantity }}</p></div>
+                <div style="flex:1"><p>edit</p></div>
+
+            </div>
+        {% empty %}
+            <h3>No products</h3>
+        {% endfor %}
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".user-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+{% endblock %}

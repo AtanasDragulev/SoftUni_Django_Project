@@ -1,0 +1,12 @@
+{% extends 'frontend/base.html' %}
+
+{% block content %}
+    <h1>Delete Product</h1>
+    <p>Are you sure you want to delete the product "{{ object.name }}"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete">
+        <a href="{% url 'category_products' category_name=object.category.name %}">Cancel</a>
+    </form>
+{% endblock %}

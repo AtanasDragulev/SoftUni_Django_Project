@@ -1,0 +1,135 @@
+{% extends 'backoffice/base.html' %}
+{% block extrahead %}
+    <style>
+        .inventory-form {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <h1>Create Delivery</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ delivery_form.as_p }}
+        <h2>Inventory Items</h2>
+        <div id="inventory-items">
+            {% for form in inventory_forms %}
+                <div class="inventory-form">
+                    <div class="product-fields">
+                        <label for="{{ form.product_id.id_for_label }}">Product ID:</label>
+                        <input type="number" name="{{ form.product_id.html_name }}" value="{{ form.product_id.value }}">
+                        <label for="{{ form.product.id_for_label }}">Product:</label>
+                        <input type="hidden" name="{{ form.product.html_name }}" value="{{ form.product.value }}"
+                               readonly>
+                        <input type="text" name="{{ form.product_slug.html_name }}"
+                               value="{{ form.product_slug.value }}" readonly>
+                        {{ form.serial_number }}
+                        {{ form.cost }}
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-new-row">Add New Row</button>
+        <input type="submit" value="Create Delivery">
+    </form>
+
+    <script>
+        function attachEventListenersToRow(formDiv) {
+            const productIdField = formDiv.querySelector('[name$="-product_id"]');
+            const productField = formDiv.querySelector('[name$="-product"]');
+            const productSlugField = formDiv.querySelector('[name$="-product_slug"]');
+
+            productIdField.addEventListener('keypress', async event => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const productId = event.target.value.trim();
+                    if (productId !== '') {
+                        try {
+                            const response = await fetch(`/get_product/${productId}/`);
+                            if (!response.ok) {
+                                throw new Error('Product not found');
+                            }
+                            const productData = await response.json();
+                            productField.value = productData.pk;
+                            productSlugField.value = productData.slug;
+                        } catch (error) {
+                            console.error(error);
+                            productSlugField.value = 'Product not found';
+                        }
+                    }
+                }
+            });
+        }
+
+        // Attach event listeners to existing rows
+        document.querySelectorAll('.inventory-form').forEach(attachEventListenersToRow);
+
+        document.getElementById('add-new-row').addEventListener('click', function () {
+            var formIdx = document.querySelectorAll('.inventory-form').length;
+
+            var newFormDiv = document.createElement('div');
+            newFormDiv.className = 'inventory-form';
+
+            // Product fields container
+            var productFieldsDiv = document.createElement('div');
+            productFieldsDiv.className = 'product-fields';
+
+            // Product ID field
+            var productIdLabel = document.createElement('label');
+            productIdLabel.setAttribute('for', `id_inventory_set-${formIdx}-product_id`);
+            productIdLabel.textContent = 'Product ID:';
+            productFieldsDiv.appendChild(productIdLabel);
+            productFieldsDiv.appendChild(document.createTextNode(' '));
+
+            var productIdInput = document.createElement('input');
+            productIdInput.setAttribute('type', 'number');
+            productIdInput.setAttribute('name', `inventory_set-${formIdx}-product_id`);
+            productFieldsDiv.appendChild(productIdInput);
+            productFieldsDiv.appendChild(document.createTextNode(' '));
+
+            var productInput = document.createElement('input');
+            productInput.setAttribute('type', 'hidden');
+            productInput.setAttribute('name', `inventory_set-${formIdx}-product`);
+            productFieldsDiv.appendChild(productInput);
+            productFieldsDiv.appendChild(document.createTextNode(' '));
+
+            var costLabel = document.createElement('label');
+            costLabel.setAttribute('for', `id_inventory_set-${formIdx}-product`);
+            costLabel.textContent = 'Product:';
+            productFieldsDiv.appendChild(costLabel);
+            productFieldsDiv.appendChild(document.createTextNode(' '));
+
+            var productSlugInput = document.createElement('input');
+            productSlugInput.setAttribute('type', 'text');
+            productSlugInput.setAttribute('name', `inventory_set-${formIdx}-product_slug`);
+            productSlugInput.setAttribute('readonly', 'readonly');
+            productFieldsDiv.appendChild(productSlugInput);
+            productFieldsDiv.appendChild(document.createTextNode(' '));
+
+
+            var serialNumberInput = document.createElement('input');
+            serialNumberInput.setAttribute('type', 'text');
+            serialNumberInput.setAttribute('name', `inventory_set-${formIdx}-serial_number`);
+            productFieldsDiv.appendChild(serialNumberInput);
+            productFieldsDiv.appendChild(document.createTextNode(' '));
+
+
+            var costInput = document.createElement('input');
+            costInput.setAttribute('type', 'number');
+            costInput.setAttribute('name', `inventory_set-${formIdx}-cost`);
+            costInput.setAttribute('step', '0.01');
+            productFieldsDiv.appendChild(costInput);
+            productFieldsDiv.appendChild(document.createTextNode(' '));
+
+            // Append product fields to the new row
+            newFormDiv.appendChild(productFieldsDiv);
+
+            // Attach event listeners to the new row
+            attachEventListenersToRow(newFormDiv);
+
+            document.getElementById('inventory-items').appendChild(newFormDiv);
+        });
+    </script>
+{% endblock %}

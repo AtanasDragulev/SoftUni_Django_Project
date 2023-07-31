@@ -1,0 +1,45 @@
+{% extends 'cart/header_cart.html' %}
+{% load static %}
+
+{% block content %}
+    <h2>Name: {{ profile.first_name }} {{ profile.last_name }}</h2>
+    <hr>
+    <h4>Please select shipping address and payment option:</h4>
+
+    <form method="post" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        {{ form }}
+
+        <hr>
+        <h4>Your order:</h4>
+        <div class="box-element">
+            <div class="cart-row">
+
+                <div style="flex:2"><strong>Item</strong></div>
+
+                <div style="flex:1"><strong>Quantity</strong></div>
+                <div style="flex:1"><strong>Total</strong></div>
+            </div>
+            {% for item in cart_items %}
+                <div class="cart-row">
+
+                    <div style="flex:2"><p>{{ item.product.name }}</p></div>
+                    <div style="flex:1">
+                        <p id="quantity-{{ item.product.id }}" class="quantity">{{ item.quantity }}</p>
+                    </div>
+                    <div style="flex:1"><p>${{ item.total }}</p>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+        <button class="btn btn-success" type="submit" style="float: right;">Complete Order</button>
+    </form>
+    <script>
+        var csrftoken = '{{ csrf_token }}';
+    </script>
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+
+
+{% endblock content %}

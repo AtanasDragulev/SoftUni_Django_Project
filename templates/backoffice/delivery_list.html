@@ -1,0 +1,32 @@
+{% extends 'backoffice/base.html' %}
+{% block extrahead %}
+    <style>
+        .cart-row {
+            display: flex;
+            align-items: stretch;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ececec;
+
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <h2>Deliveries:</h2>
+    <div class="cart-row">
+        <div style="flex:2"><strong>Delivery Date</strong></div>
+        <div style="flex:1"><strong>Delivery Number</strong></div>
+        <div style="flex:1"><strong>Invoice</strong></div>
+        <div style="flex:1"><strong>Cost</strong></div>
+    </div>
+    {% for delivery in objects_list %}
+        <div class="cart-row">
+        <div style="flex:2"><p>{{ delivery.delivery_date}}</p></div>
+        <div style="flex:1"><p>{{ delivery.delivery_number}}</p></div>
+        <div style="flex:1"><p>{{ delivery.invoice_number}}</p></div>
+        <div style="flex:1"><p>{{ delivery.cost|floatformat:2}}</p></div>
+        </div>
+    {% empty %}
+        <h3>No deliveries yet</h3>
+    {% endfor %}
+{% endblock %}

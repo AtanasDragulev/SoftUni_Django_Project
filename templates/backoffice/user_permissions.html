@@ -1,0 +1,18 @@
+{% extends 'backoffice/base.html' %}
+
+{% block content %}
+    <h2>User Permissions for {{ user.email }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for group in groups %}
+            <div>
+                <input type="checkbox" id="{{ group.name }}" name="{{ group.name }}" {% if group in user.groups.all %}checked{% endif %}>
+                <label for="{{ group.name }}">{{ group.name }}</label>
+            </div>
+        {% endfor %}
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}
+
+
+{#{% if user.groups.filter(name=group.name) %}checked{% endif %}>#}
