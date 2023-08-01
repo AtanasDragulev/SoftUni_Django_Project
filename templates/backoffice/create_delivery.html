@@ -78,32 +78,32 @@
 
             // Product ID field
             var productIdLabel = document.createElement('label');
-            productIdLabel.setAttribute('for', `id_inventory_set-${formIdx}-product_id`);
+            productIdLabel.setAttribute('for', `id_form-${formIdx}-product_id`);
             productIdLabel.textContent = 'Product ID:';
             productFieldsDiv.appendChild(productIdLabel);
             productFieldsDiv.appendChild(document.createTextNode(' '));
 
             var productIdInput = document.createElement('input');
             productIdInput.setAttribute('type', 'number');
-            productIdInput.setAttribute('name', `inventory_set-${formIdx}-product_id`);
+            productIdInput.setAttribute('name', `form-${formIdx}-product_id`);
             productFieldsDiv.appendChild(productIdInput);
             productFieldsDiv.appendChild(document.createTextNode(' '));
 
             var productInput = document.createElement('input');
             productInput.setAttribute('type', 'hidden');
-            productInput.setAttribute('name', `inventory_set-${formIdx}-product`);
+            productInput.setAttribute('name', `form-${formIdx}-product`);
             productFieldsDiv.appendChild(productInput);
             productFieldsDiv.appendChild(document.createTextNode(' '));
 
             var costLabel = document.createElement('label');
-            costLabel.setAttribute('for', `id_inventory_set-${formIdx}-product`);
+            costLabel.setAttribute('for', `id_form-${formIdx}-product`);
             costLabel.textContent = 'Product:';
             productFieldsDiv.appendChild(costLabel);
             productFieldsDiv.appendChild(document.createTextNode(' '));
 
             var productSlugInput = document.createElement('input');
             productSlugInput.setAttribute('type', 'text');
-            productSlugInput.setAttribute('name', `inventory_set-${formIdx}-product_slug`);
+            productSlugInput.setAttribute('name', `form-${formIdx}-product_slug`);
             productSlugInput.setAttribute('readonly', 'readonly');
             productFieldsDiv.appendChild(productSlugInput);
             productFieldsDiv.appendChild(document.createTextNode(' '));
@@ -111,14 +111,14 @@
 
             var serialNumberInput = document.createElement('input');
             serialNumberInput.setAttribute('type', 'text');
-            serialNumberInput.setAttribute('name', `inventory_set-${formIdx}-serial_number`);
+            serialNumberInput.setAttribute('name', `form-${formIdx}-serial_number`);
             productFieldsDiv.appendChild(serialNumberInput);
             productFieldsDiv.appendChild(document.createTextNode(' '));
 
 
             var costInput = document.createElement('input');
             costInput.setAttribute('type', 'number');
-            costInput.setAttribute('name', `inventory_set-${formIdx}-cost`);
+            costInput.setAttribute('name', `form-${formIdx}-cost`);
             costInput.setAttribute('step', '0.01');
             productFieldsDiv.appendChild(costInput);
             productFieldsDiv.appendChild(document.createTextNode(' '));
