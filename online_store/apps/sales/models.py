@@ -18,7 +18,7 @@ class Order(models.Model):
     @property
     def get_total(self):
         orderitems = self.orderitem_set.all()
-        total = sum([item.get_total for item in orderitems])
+        total = sum([item.price for item in orderitems])
         return total
 
     @property
@@ -32,13 +32,8 @@ class OrderItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.RESTRICT)
     order = models.ForeignKey(Order, on_delete=models.RESTRICT)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    quantity = models.PositiveIntegerField()
+    serial_number = models.CharField(max_length=100, unique=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
-
-    @property
-    def get_total(self):
-        total = self.price * self.quantity
-        return total
 
 
 class ShippingDetails(models.Model):

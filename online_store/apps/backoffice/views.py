@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.urls import reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import Group
@@ -32,7 +33,8 @@ class CreateDelivery(AccessRequiredMixin, views.CreateView):
 def create_delivery_view(request):
     if request.method == 'POST':
         delivery_form = DeliveryForm(request.POST)
-        inventory_forms = [InventoryForm(request.POST, prefix=f'form-{i}') for i in range(3)]
+        forms_count = sum(1 for key in request.POST if key.startswith('form-')) / 5
+        inventory_forms = [InventoryForm(request.POST, prefix=f'form-{i}') for i in range(int(forms_count))]
         if delivery_form.is_valid() and all(form.is_valid() for form in inventory_forms):
             delivery = delivery_form.save()
 
@@ -42,15 +44,14 @@ def create_delivery_view(request):
                 product_slug = form.cleaned_data['product_slug']
                 try:
                     product = Product.objects.get(slug=product_slug)
-                    inventory.product = product  # Assign the product instance to the inventory item
+                    inventory.product = product
                     inventory.delivery = delivery
+                    inventory.in_stock = True
                     inventory.save()
                 except Product.DoesNotExist:
-                    # Handle the case where the product does not exist (optional)
-                    print(f"Product with slug '{product_slug}' does not exist.")
-                    continue
 
-            # Redirect to a success page or do something else
+                    raise ValidationError('Product does not exist')
+
             return redirect('dashboard')
     else:
         delivery_form = DeliveryForm()
