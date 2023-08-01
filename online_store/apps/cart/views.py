@@ -2,7 +2,7 @@ import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import TemplateView, FormView
@@ -11,6 +11,7 @@ from .forms import CheckoutForm
 
 from ..accounts.models import Profile, Address
 from ..core.models import Product
+from ..inventory.models import Inventory
 from ..sales.models import Order, OrderItem, ShippingDetails
 
 
@@ -93,7 +94,7 @@ class DeleteCartItemView(View):
 class CheckoutView(LoginRequiredMixin, FormView):
     template_name = 'cart/checkout.html'
     form_class = CheckoutForm
-    success_url = reverse_lazy('complete_checkout', context={'status': 'success'})
+    success_url = reverse_lazy('complete_checkout')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -129,12 +130,19 @@ class CheckoutView(LoginRequiredMixin, FormView):
         for cart_item in cart_items:
             product = cart_item['product']
             quantity = cart_item['quantity']
-            OrderItem.objects.create(
-                product=product,
-                order=order,
-                price=product.price,
-                quantity=quantity,
-            )
+            for _ in range(quantity):
+                item = Inventory.objects.filter(product=product, in_stock=True).first()
+                OrderItem.objects.create(
+                    product=item.product,
+                    order=order,
+                    price=product.price,
+                    serial_number=item.serial_number,
+                )
+                item.in_stock = False
+                item.save(update_fields=['in_stock'])
+                product.quantity -= 1
+                product.save(update_fields=['quantity'])
+
         address = Address.objects.get(pk=form.cleaned_data['selected_address'].pk)
         shipping_details = ShippingDetails.objects.create(
             customer=self.request.user,
