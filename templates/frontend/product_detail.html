@@ -20,7 +20,7 @@
     {% endif %}
 
     <p>Description: {{ product.description }}</p>
-    {% if request.user|in_group:'Staff' %}
+    {% if request.user|in_group:'Staff' and product.created_by == request.user %}
         <a href="{% url 'edit_product' product.slug %}">
             <button>Edit Product</button>
         </a>

@@ -14,7 +14,6 @@ class ProductCreationForm(forms.Form):
         self.fields['image'] = forms.ImageField(label='Product Image')
         self.fields['description'] = forms.CharField(label='Product Description')
         self.fields['price'] = forms.DecimalField(label='Product Price')
-        self.fields['created_by'] = forms.ModelChoiceField(label='User', queryset=User.objects.all())
 
         self.category = category
         category_attributes = CategoryAttribute.objects.filter(category=category)
@@ -40,7 +39,7 @@ class ProductCreationForm(forms.Form):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'brand', 'category', 'image', 'description', 'price', 'created_by']
+        fields = ['name', 'brand', 'category', 'image', 'description', 'price']
 
 
 ProductAttributeFormSet = inlineformset_factory(Product, ProductAttribute, fields=('name', 'value'), extra=1)

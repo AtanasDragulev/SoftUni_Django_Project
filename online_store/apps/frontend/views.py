@@ -49,7 +49,7 @@ def create_product(request, category_name):
                 image=form.cleaned_data['image'],
                 description=form.cleaned_data['description'],
                 price=form.cleaned_data['price'],
-                created_by=form.cleaned_data['created_by']
+                created_by=request.user
             )
             for attribute in category.categoryattribute_set.all():
                 attribute_value = form.cleaned_data[attribute.name]
