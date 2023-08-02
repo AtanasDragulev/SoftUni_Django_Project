@@ -2,6 +2,7 @@ from django import forms
 
 from online_store.apps.core.models import Product
 from online_store.apps.inventory.models import Inventory, Delivery
+from online_store.apps.sales.models import Order
 
 
 class DeliveryForm(forms.ModelForm):
@@ -22,7 +23,7 @@ class InventoryForm(forms.ModelForm):
 InventoryFormSet = forms.modelformset_factory(Inventory, form=InventoryForm, extra=1)
 
 
-# class UserPermissionsForm(forms.Form):
-#     staff = forms.BooleanField(label='Staff Member', required=False)
-#     managers = forms.BooleanField(label='Manager', required=False)
-#     admin = forms.BooleanField(label='Administrator', required=False)
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['complete',]

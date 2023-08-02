@@ -1,16 +1,17 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import Group
 
 from django.views import generic as views
 
 from online_store.tools.access_control import AccessRequiredMixin, group_required
-from online_store.apps.backoffice.forms import DeliveryForm, InventoryForm
+from online_store.apps.backoffice.forms import DeliveryForm, InventoryForm, OrderForm
 from online_store.apps.core.models import Product, Category
-from online_store.apps.inventory.models import Delivery
-from online_store.apps.sales.models import Order
+from online_store.apps.inventory.models import Delivery, Inventory
+from online_store.apps.sales.models import Order, OrderItem
 
 UserModel = get_user_model()
 
@@ -141,3 +142,44 @@ class OrderManagementView(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Staff"
     model = Order
     template_name = 'backoffice/order_management.html'
+
+
+class OrderProcessView(AccessRequiredMixin, views.UpdateView):
+    REQUIRED_GROUP = "Staff"
+    model = Order
+    template_name = 'backoffice/order_process.html'
+    form_class = OrderForm
+    success_url = reverse_lazy('orders_view')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        order_items = OrderItem.objects.filter(order=self.object)
+        context.update({'order_items': order_items})
+        return context
+
+
+class OrderItemEditView(AccessRequiredMixin, views.UpdateView):
+    REQUIRED_GROUP = "Staff"
+    model = OrderItem
+    template_name = 'backoffice/orderitem_edit.html'
+    fields = ['serial_number']
+
+    def get_success_url(self):
+        order = self.object.order
+        return reverse('order_process', kwargs={"pk": order.pk})
+
+    def form_valid(self, form):
+        old_serial = self.get_object().serial_number
+        new_serial = form.cleaned_data["serial_number"]
+
+        old_item = Inventory.objects.get(serial_number=old_serial)
+        old_item.in_stock = True
+        old_item.save()
+
+        new_item = Inventory.objects.get(serial_number=new_serial)
+        new_item.in_stock = False
+        new_item.save()
+
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+

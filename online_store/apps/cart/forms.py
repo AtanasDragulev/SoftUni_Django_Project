@@ -1,5 +1,7 @@
 from django import forms
 
+from online_store.apps.sales.models import Order, OrderItem
+
 
 class AddToCartForm(forms.Form):
     product_id = forms.IntegerField()
@@ -27,3 +29,6 @@ class CheckoutForm(forms.Form):
         super(CheckoutForm, self).__init__(*args, **kwargs)
         if user:
             self.fields['selected_address'].queryset = user.address_set.all()
+
+
+
