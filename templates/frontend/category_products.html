@@ -1,5 +1,6 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
+{% load custom_filters %}
 {% block extrahead %}
     {#    <link rel="stylesheet" href="{% static "CSS/product_cards.css" %}">#}
 {% endblock %}
@@ -15,10 +16,11 @@
 
 
             <h2>{{ category.name }}</h2>
-
-            <a href="{% url 'create_product' category_name=category.name %}">
-                <button type="button" class="btn btn-primary">Create Product</button>
-            </a>
+            {% if request.user|in_group:'Staff' %}
+                <a href="{% url 'create_product' category_name=category.name %}">
+                    <button type="button" class="btn btn-primary">Create Product</button>
+                </a>
+            {% endif %}
             <hr>
             {% for product in products %}
                 <div class="card-box">
