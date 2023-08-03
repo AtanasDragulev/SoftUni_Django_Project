@@ -1,0 +1,66 @@
+{% extends 'backoffice/base.html' %}
+
+{% block extrahead %}
+    <style>
+        .cart-row {
+            display: flex;
+            align-items: stretch;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ececec;
+
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+
+
+
+{% block content %}
+
+
+    <h2>Order: {{ order.pk }}</h2>
+    <div>Client: {{ order.customer.profile.first_name }} {{ order.customer.profile.last_name }}</div>
+    <div>Client email: {{ order.customer }} </div>
+    <div>Delivery Address: {{ order.shippingdetails_set.get }}</div>
+    <br>
+    <table>
+
+        <div class="cart-row">
+            <div style="flex:1"><strong>PRODUCT ID</strong></div>
+            <div style="flex:1"><strong>PRODUCT</strong></div>
+            <div style="flex:1"><strong>SERIAL NUMBER</strong></div>
+            <div style="flex:1"><strong>PRICE</strong></div>
+            <div style="flex:1"><strong>ACTION</strong></div>
+        </div>
+        {% for item in order_items %}
+            <div class="cart-row user-row">
+                <div style="flex:1"><p>{{ item.product.id }}</p></div>
+                <div style="flex:1"><p>{{ item.product.slug }}</p></div>
+                <div style="flex:1">{{ item.serial_number }}</div>
+                <div style="flex:1"><p>{{ item.price }}</p></div>
+                <div style="flex:1">
+                    <a href="{% url 'order_edit_item' pk=item.pk %}">edit</a>
+                </div>
+            </div>
+        {% empty %}
+            <h3>No users</h3>
+        {% endfor %}
+    </table>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Save</button>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            $("#searchInput").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $(".user-row").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+{% endblock %}

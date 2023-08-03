@@ -1,0 +1,11 @@
+{% extends 'backoffice/base.html' %}
+
+{% block content %}
+    <h2>Edit Order Item: {{ object.product.slug }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <p>Old serial number: {{ object.serial_number }}</p>
+        <p>New serial number:{{ form.serial_number }}</p>
+        <button type="submit">Save</button>
+    </form>
+{% endblock %}

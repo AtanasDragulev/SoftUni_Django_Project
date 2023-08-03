@@ -36,7 +36,7 @@
                 <div style="flex:1"><p>{{ order.complete }}</p></div>
                 <div style="flex:1"><p>{{ order.payment_type }}</p></div>
                 <div style="flex:1"><p>{{ order.get_total }}</p></div>
-                <div style="flex:1"><p>process</p></div>
+                <div style="flex:1"><p><a href="{%  url 'order_process' pk=order.pk %}">process</a></p></div>
 
             </div>
         {% empty %}
