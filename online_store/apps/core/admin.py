@@ -23,14 +23,20 @@ class BrandAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('category', 'brand', 'name', 'quantity', 'price', 'created_by')
+    ordering = ("category", '-quantity')
+    list_filter = ('category', 'brand', )
 
 
 @admin.register(CategoryAttribute)
 class CategoryAttributeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('category', 'name')
+    ordering = ("category", 'name')
+    list_filter = ('category', )
 
 
 @admin.register(ProductAttribute)
 class ProductAttributeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('product', 'name', 'value')
+    ordering = ("product", )
+    list_filter = ('product', 'name', 'value')
