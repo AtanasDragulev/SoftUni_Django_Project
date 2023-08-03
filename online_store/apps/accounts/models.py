@@ -55,6 +55,9 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=30)
     discount_modifier = models.SmallIntegerField(default=1)
 
+    def __str__(self):
+        return f"{self.user}"
+
 
 class Address(models.Model):
     user = models.ForeignKey(StoreUser, on_delete=models.CASCADE)
@@ -70,9 +73,4 @@ class Address(models.Model):
         return f"{self.city} {self.address} {self.country}"
 
 
-class InvoiceData(models.Model):
-    user = models.ForeignKey(StoreUser, on_delete=models.CASCADE)
-    company_name = models.CharField(max_length=50)
-    tax_id = models.CharField(max_length=50)
-    billing_address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    billing_name = models.CharField(max_length=100)
+
