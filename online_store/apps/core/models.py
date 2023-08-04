@@ -44,6 +44,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to="product_images/", null=True, blank=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     quantity = models.IntegerField(default=0)
+    active = models.BooleanField(default=True)
     description = models.TextField()
     created_by = models.ForeignKey(User, on_delete=models.RESTRICT, null=True, related_name='created_products')
     created_at = models.DateTimeField(auto_now_add=True)
