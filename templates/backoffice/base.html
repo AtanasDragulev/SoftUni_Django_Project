@@ -28,15 +28,8 @@
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        Orders
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="{% url 'orders_view' %}">View Orders</a></li>
-                        <li><a class="dropdown-item" href="{% url 'create_delivery' %}">Create Order</a></li>
-                    </ul>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'orders_view' %}">View Orders</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -58,7 +51,7 @@
                         <li><a class="dropdown-item" href="{% url 'product_management' %}">Products</a></li>
                     </ul>
                 </li>
-                                <li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-bs-toggle="dropdown" aria-expanded="false">
                         Admin

@@ -26,6 +26,7 @@
             <div style="flex:2"><strong>NAME</strong></div>
             <div style="flex:1"><strong>PRICE</strong></div>
             <div style="flex:1"><strong>QUANTITY</strong></div>
+            <div style="flex:1"><strong>ACTIVE</strong></div>
             <div style="flex:1"><strong>ACTION</strong></div>
         </div>
         {% for product in object_list %}
@@ -34,7 +35,12 @@
                 <div style="flex:2"><p>{{ product.name }}</p></div>
                 <div style="flex:1"><p>{{ product.price }}</p></div>
                 <div style="flex:1"><p>{{ product.quantity }}</p></div>
-                <div style="flex:1"><p>edit</p></div>
+                <div style="flex:1"><p>{{ product.active }}</p></div>
+                <div style="flex:1">
+                    <a href="{% url 'product_edit' pk=product.pk %}">Edit</a> /
+                    <a href="{% url 'product_deactivate' pk=product.pk %}">Deactivate</a> /
+                    <a href="{% url 'product_delete' pk=product.pk %}">Delete</a>
+                </div>
 
             </div>
         {% empty %}

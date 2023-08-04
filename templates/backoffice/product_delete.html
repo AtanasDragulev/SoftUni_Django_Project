@@ -1,0 +1,27 @@
+{% extends 'backoffice/base.html' %}
+
+
+{% block content %}
+    {% if has_items %}
+        <script>
+            window.onload = function () {
+                alert("The product has inventory. Redirecting to the deactivate page.");
+                window.location.href = "{% url 'product_deactivate' object.pk %}";
+            };
+        </script>
+
+    {% endif %}
+    <center>
+        <h1>Delete Product</h1>
+
+        <h3>Do you want to delete product {{ object }}
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit">DELETE</button>
+            </form>
+        </h3>
+
+    </center>
+
+
+{% endblock %}

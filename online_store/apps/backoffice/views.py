@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
@@ -8,7 +9,7 @@ from django.contrib.auth.models import Group
 from django.views import generic as views
 
 from online_store.tools.access_control import AccessRequiredMixin, group_required
-from online_store.apps.backoffice.forms import DeliveryForm, InventoryForm, OrderForm
+from online_store.apps.backoffice.forms import *
 from online_store.apps.core.models import Product, Category
 from online_store.apps.inventory.models import Delivery, Inventory
 from online_store.apps.sales.models import Order, OrderItem
@@ -132,10 +133,54 @@ class CreateProductView(AccessRequiredMixin, views.CreateView):
     template_name = 'backoffice/product_create.html'
 
 
-class EditProductView(AccessRequiredMixin, views.UpdateView):
+class DeactivateProductView(AccessRequiredMixin, views.UpdateView):
     REQUIRED_GROUP = "Staff"
     model = Product
-    fields = ('name', 'parent_category', 'order',)
+    fields = []
+    template_name = 'backoffice/product_deactivate.html'
+    success_url = reverse_lazy('product_management')
+
+    def form_valid(self, form):
+        self.object.active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+@login_required
+@group_required("Staff")
+def edit_product(request, pk):
+    product = Product.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        formset = ProductAttributeFormSet(request.POST, instance=product)
+        if form.is_valid() and formset.is_valid():
+            formset.save()
+            form.save()
+            return redirect('product_management')
+
+    else:
+        form = ProductForm(instance=product)
+        formset = ProductAttributeFormSet(instance=product)
+
+    context = {
+        'product': product,
+        'form': form,
+        'formset': formset,
+    }
+    return render(request, 'backoffice/product_edit.html', context)
+
+
+class DeleteProductView(AccessRequiredMixin, views.DeleteView):
+    REQUIRED_GROUP = "Managers"
+    model = Product
+    template_name = 'backoffice/product_delete.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        has_items = Inventory.objects.filter(product=self.object).exists()
+        context.update({'has_items': has_items})
+        return context
 
 
 class OrderManagementView(AccessRequiredMixin, views.ListView):
@@ -182,4 +227,3 @@ class OrderItemEditView(AccessRequiredMixin, views.UpdateView):
 
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
-

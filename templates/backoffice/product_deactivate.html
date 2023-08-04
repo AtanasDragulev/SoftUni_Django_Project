@@ -1,0 +1,19 @@
+{% extends 'backoffice/base.html' %}
+
+
+{% block content %}
+    <center>
+        <h2>Deactivate Product?</h2>
+        <h3>
+            Do you want to set the product as inactive?
+
+            <form method="POST">
+                {% csrf_token %}
+                <br>
+                <button type="submit">Deactivate</button>
+            </form>
+        </h3>
+    </center>
+
+
+{% endblock %}

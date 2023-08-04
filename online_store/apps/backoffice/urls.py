@@ -17,7 +17,9 @@ urlpatterns = (
 
     path('products', ProductManagementView.as_view(), name='product_management'),
     path('products/create', CreateProductView.as_view(), name='product_create'),
-    path('products/edit', EditProductView.as_view(), name='product_edit'),
+    path('products/edit/<int:pk>', edit_product, name='product_edit'),
+    path('products/deactivate/<int:pk>', DeactivateProductView.as_view(), name='product_deactivate'),
+    path('products/delete/<int:pk>', DeleteProductView.as_view(), name='product_delete'),
 
     path('admin/users', UserManagement.as_view(), name='manage_users'),
     path('admin/users/edit/<int:user_pk>', UserPermissionsView.as_view(), name='user_permissions'),
