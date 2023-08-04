@@ -29,7 +29,7 @@ class CategoryProductsView(TemplateView):
     def get_context_data(self, category_name, **kwargs):
         context = super().get_context_data(**kwargs)
         category = Category.objects.get(name=category_name)
-        products = Product.objects.filter(category=category)
+        products = Product.objects.filter(category=category, active=True)
         context.update({'category': category, 'products': products, })
         return context
 
