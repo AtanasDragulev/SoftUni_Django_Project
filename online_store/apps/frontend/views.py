@@ -9,6 +9,7 @@ from .forms import ProductCreationForm, ProductForm, ProductAttributeFormSet, Se
 from online_store.tools.access_control import AccessRequiredMixin, group_required
 
 from ..core.models import Category, Product, ProductAttribute
+from online_store.tools.functions import get_attribute_filters
 
 main_categories = Category.objects.filter(parent_category__isnull=True)
 
@@ -121,3 +122,28 @@ class SearchResultsView(FormView):
         results = self.model.objects.filter(title__icontains=query)
         context = self.get_context_data(form=form, results=results)
         return self.render_to_response(context)
+
+
+def products_by_category(request, category_name):
+    category = Category.objects.get(name=category_name)
+    products = Product.objects.filter(category=category)
+    attributes = ProductAttribute.objects.filter(product__category=category)
+    attribute_groups = get_attribute_filters(attributes)
+
+    if request.method == 'POST':
+
+        filtered_products = []
+        filter_set = request.POST
+        for name, value in filter_set.items():
+            filtered_products.append(set(products.filter(productattribute__name=name, productattribute__value=value)))
+        products = list(set.intersection(*map(set, [x for x in filtered_products if x])))
+        attributes = ProductAttribute.objects.filter(product__category=category)
+        attribute_groups = get_attribute_filters(attributes)
+
+    context = {
+        'category': category,
+        'products': products,
+        'attribute_groups': attribute_groups,
+
+    }
+    return render(request, 'frontend/filters.html', context)

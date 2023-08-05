@@ -1,30 +1,35 @@
-<div>
-    <!-- Main categories -->
-    {% for category in sidebar_categories %}
-        <div class="category">
-            <h3>{{ category.main_category.name }}</h3>
-            <ul>
-                {% for sub_category in category.sub_categories %}
-                    <li class="sub-categories"><a href="{% url 'category_products' sub_category.name %}">{{ sub_category.name }}</a></li>
-                {% endfor %}
-            </ul>
-
-        </div>
-    {% endfor %}
+<div class="dropdown">
+    <button class="dropbtn">Menu</button>
+    <div class="dropdown-options">
+        {% for category in sidebar_categories %}
+            <div class="category">
+                <span id="category-name" class="category-name">{{ category.main_category.name }}</span>
+                <div class="subcategories">
+                    {% for sub_category in category.sub_categories %}
+                        <a href="{% url 'category_products' sub_category.name %}">{{ sub_category.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 </div>
 
 
-<!-- Your existing script tags -->
 
 <script>
-    // JavaScript for collapsing/expanding the main categories
+    // Get all the category elements
     const categories = document.querySelectorAll('.category');
-    categories.forEach(category => {
-        const title = category.querySelector('h3');
-        const list = category.querySelector('ul');
 
-        title.addEventListener('click', () => {
-            category.classList.toggle('collapsed');
+    // Loop through each category element
+    categories.forEach((category) => {
+        const categoryName = category.querySelector('.category-name');
+        const subcategories = category.querySelector('.subcategories');
+
+        // Add an event listener to show/hide the subcategories
+        categoryName.addEventListener('click', () => {
+            // Toggle the 'active' class on the subcategories element
+            subcategories.classList.toggle('active');
         });
+
     });
 </script>

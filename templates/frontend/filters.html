@@ -1,13 +1,29 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
-{% load custom_filters %}
 {% block extrahead %}
+    <style>
+        #filter-sidebar {
+            height: 100%;
+            width: 200px;
+            overflow: auto;
+        }
+
+        #filter-box {
+            height: 100px;
+            overflow: auto;
+        }
+
+    </style>
     <link rel="stylesheet" href="{% static "CSS/test/catalog.css" %}">
 {% endblock %}
+
+
 {% block content %}
+    <h1 class="category-title">{{ category.name }}</h1>
+
     <div id="content">
         <div id="sidebar" class="sidebar">
-            <form method="POST" action="{% url 'filters_test' category.name %}">
+            <form method="POST" action="{% url 'category_products' category.name %}">
                 {% csrf_token %}
                 <h2>Filters:</h2>
                 <div id="filter-sidebar" class="scrollable-list">
@@ -17,8 +33,10 @@
                         <div id="filter-box">
                             {% for value in values %}
                                 <label>
-                                    <input type="checkbox" name="{{ name }}" value="{{ value }}">
-                                    <h5>{{ value }}</h5>
+                                    <div>
+                                        <input type="checkbox" name="{{ name }}" value="{{ value }}">|
+                                        {{ value }}
+                                    </div>
                                 </label>
                             {% endfor %}
                         </div>
@@ -29,15 +47,6 @@
         </div>
 
         <div id="product">
-
-
-            <h2>{{ category.name }}</h2>
-            {% if request.user|in_group:'Staff' %}
-                <a href="{% url 'create_product' category_name=category.name %}">
-                    <button type="button" class="btn btn-primary">Create Product</button>
-                </a>
-            {% endif %}
-            <hr>
             {% for product in products %}
                 <div class="card-box">
                     <img src="{{ product.image.url }}" alt="Product Image">
@@ -63,9 +72,7 @@
                 <h3>No Products</h3>
             {% endfor %}
         </div>
-
     </div>
-
     <script>
         var csrftoken = '{{ csrf_token }}';
     </script>
@@ -73,3 +80,28 @@
 {% endblock %}
 
 
+{#{% block content %}#}
+{#    <h1>Products in {{ category.name }}</h1>#}
+{#    <form method="POST" action="{% url 'filters_test' category.name %} ">#}
+{#    {% csrf_token %}#}
+{#    <h2>Filters:</h2>#}
+{#    <div id="filter-sidebar" class="scrollable-list">#}
+{#        {% for name, values in attribute_groups.items %}#}
+{#            <select name="{{ name }}" size="{{ values|length }}">#}
+{#            <h3>{{ name }}</h3>#}
+{#            {% for value in values %}#}
+{#                <input type="checkbox" name="{{ name }}" value="{{ value }}"> {{ value }}<br>#}
+{#            {% endfor %}#}
+{#            </select>#}
+{#        {% endfor %}#}
+{#        <button type="submit">filter</button>#}
+{#    </div>#}
+{#    </form>#}
+{##}
+{#    <div id="product-list">#}
+{#        {% for product in products %}#}
+{#            {{ product }}#}
+{#        {% endfor %}#}
+{#    </div>#}
+{##}
+{#{% endblock %}#}
