@@ -45,15 +45,14 @@
 
                 <table class="table">
                     <tr>
+                        <th><h3>Total:<strong> ${{ total_price|floatformat:2 }}</strong></h3></th>
+                    </tr>
+                    <tr>
+
                         <th><a style="float:left; margin:5px;" class="btn btn-info" href="{% url 'cart' %}">Update
                             Cart</a></th>
-                        <th><h5>Items: <strong>{{ cart_items|length }}</strong></h5></th>
-                        <th><h5>Total:<strong> ${{ total_price|floatformat:2 }}</strong></h5></th>
-
                         <th>
-
                             <a style="float:right; margin:5px;" class="btn btn-success" href="{% url 'checkout' %}">Checkout</a>
-
                         </th>
                     </tr>
                 </table>

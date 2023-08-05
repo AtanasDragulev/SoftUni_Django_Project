@@ -133,7 +133,7 @@ class CheckoutView(LoginRequiredMixin, FormView):
             for _ in range(quantity):
                 item = Inventory.objects.filter(product=product, in_stock=True).first()
                 OrderItem.objects.create(
-                    product=item.product,
+                    product=product,
                     order=order,
                     price=product.price,
                     serial_number=item.serial_number,

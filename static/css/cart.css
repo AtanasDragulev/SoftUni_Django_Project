@@ -1,5 +1,7 @@
-body{
+.row{
 	background-color: hsl(0, 0%, 98%);
+	padding-right: 20%;
+	padding-left: 20%;
 }
 
 h1,h2,h3,h4,h5,h6{
@@ -10,7 +12,8 @@ h1,h2,h3,h4,h5,h6{
 	box-shadow:hsl(0, 0%, 80%) 0 0 16px;
 	background-color: #fff;
 	border-radius: 4px;
-	padding: 10px;
+	padding-right: 20%;
+	padding-left: 20%;
 }
 
 .thumbnail{
@@ -29,11 +32,6 @@ h1,h2,h3,h4,h5,h6{
 	background-color: #4f868c!important;
 }
 
-#cart-icon{
-	width:25px;
-	display: inline-block;
-	margin-left: 15px;
-}
 
 #cart-total{
 	display: block;

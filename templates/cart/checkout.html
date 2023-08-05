@@ -2,39 +2,42 @@
 {% load static %}
 
 {% block content %}
-    <h2>Name: {{ profile.first_name }} {{ profile.last_name }}</h2>
-    <hr>
-    <h4>Please select shipping address and payment option:</h4>
-
-    <form method="post" action="{% url 'checkout' %}">
-        {% csrf_token %}
-        {{ form }}
-
+    <div class="row">
+        <h2>Name: {{ profile.first_name }} {{ profile.last_name }}</h2>
         <hr>
-        <h4>Your order:</h4>
-        <div class="box-element">
-            <div class="cart-row">
+        <h4>Please select shipping address and payment option:</h4>
 
-                <div style="flex:2"><strong>Item</strong></div>
+        <form method="post" action="{% url 'checkout' %}">
+            {% csrf_token %}
+            {{ form }}
 
-                <div style="flex:1"><strong>Quantity</strong></div>
-                <div style="flex:1"><strong>Total</strong></div>
-            </div>
-            {% for item in cart_items %}
+            <hr>
+            <h4>Your order:</h4>
+            <div class="box-element">
                 <div class="cart-row">
+                    <div style="flex:2"></div>
+                    <div style="flex:2"><strong>Item</strong></div>
 
-                    <div style="flex:2"><p>{{ item.product.name }}</p></div>
-                    <div style="flex:1">
-                        <p id="quantity-{{ item.product.id }}" class="quantity">{{ item.quantity }}</p>
-                    </div>
-                    <div style="flex:1"><p>${{ item.total }}</p>
-                    </div>
+                    <div style="flex:1"><strong>Quantity</strong></div>
+                    <div style="flex:1"><strong>Total</strong></div>
                 </div>
+                {% for item in cart_items %}
+                    <div class="cart-row">
+                        <div style="flex:2"><img class="row-image" src="{{ item.product.image.url }}"
+                                                 alt="product image"></div>
+                        <div style="flex:2"><p>{{ item.product.name }}</p></div>
+                        <div style="flex:1">
+                            <p id="quantity-{{ item.product.id }}" class="quantity">{{ item.quantity }}</p>
+                        </div>
+                        <div style="flex:1"><p>${{ item.total }}</p>
+                        </div>
+                    </div>
 
-            {% endfor %}
-        </div>
-        <button class="btn btn-success" type="submit" style="float: right;">Complete Order</button>
-    </form>
+                {% endfor %}
+            </div>
+            <button class="btn btn-success" type="submit" style="float: right;">Complete Order</button>
+        </form>
+    </div>
     <script>
         var csrftoken = '{{ csrf_token }}';
     </script>

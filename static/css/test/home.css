@@ -94,3 +94,61 @@ nav form.d-flex {
 nav form.d-flex .btn {
     height: 100%; /* Set the height of the search button to 100% */
 }
+
+/* CSS for the collapsible sidebar */
+.category {
+    /* Your styling for category elements */
+}
+
+.sidebar {
+    width: 200px;
+    height: 100%;
+    padding: 10px;
+    background-color: #343a40; /* Dark blue background */
+    color: #ffffff; /* Text color for the sidebar */
+}
+
+.sidebar h3 {
+    margin-bottom: 5px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin-bottom: 5px;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    text-decoration: underline;
+}
+
+.category ul {
+    display: none;
+    /* Your additional styling for hidden lists */
+}
+
+.category.collapsed ul {
+    display: block;
+
+}
+
+/* Your additional styling for visible lists */
+
+.sidebar .sub-categories {
+    margin-left: 15px;
+}
+
+/*.content {*/
+/*    flex-grow: 1;*/
+/*    padding: 10px;*/
+/*    display: inline-flex;*/
+/*}*/
+

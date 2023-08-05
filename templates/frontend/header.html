@@ -1,0 +1,30 @@
+{% load static %}
+{% block extrahead %}
+    <title>Computer Store</title>
+
+    <style>
+
+    </style>
+{% endblock %}
+
+
+<div class="header">
+    <a href="{% url 'index' %}" class="logo"><img src="{% static 'images/logo.jpg' %}" alt="site logo" width="150px"
+                                                  height="100px"></a>
+    <div class="search-bar">
+        <form method="POST" action="{% url 'search_results' %}">
+            {{ search_form.query }}
+            <button class="btn" type="submit">Search</button>
+            {% csrf_token %}
+        </form>
+    </div>
+
+
+    <div class="cart">
+        <a href="{% url 'cart' %}">
+            <img alt="" id="cart-icon" src="{% static 'images/cart2.png' %}" width="50" height="50">
+        </a>
+    </div>
+
+</div>
+<br>

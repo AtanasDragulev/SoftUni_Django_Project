@@ -4,16 +4,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    {#    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">#}
-    <link rel="stylesheet" href="{% static 'css/test/style.css' %}">
-    {#    <link rel="stylesheet" href="{% static 'css/products.css' %}">#}
 
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {#    <link rel="stylesheet" href="{% static 'css/products.css' %}">#}
     {% block extrahead %}{% endblock %}
-    <title>Test</title>
+
 </head>
 <body>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
-{% include 'header.html' %}
+{% include 'frontend/header.html' %}
+{% include 'frontend/navbar.html' %}
 {% block content %}
 
 {% endblock %}

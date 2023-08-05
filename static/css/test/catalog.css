@@ -1,3 +1,8 @@
+.category-title {
+    text-align: center;
+
+}
+
 .card-box {
     box-shadow: 0 0 30px 0;
     padding: 20px;
@@ -7,7 +12,7 @@
     border-radius: 15px;
     float: left;
     height: 500px;
-    color: white;
+    color: grey;
     font-weight: bold;
     margin-bottom: 80px;
     margin-top: 20px;
@@ -131,41 +136,13 @@
     text-shadow: 2px 2px black solid;
 }
 
-#search > input[type=text] {
-    border-radius: 3px;
-    box-shadow: none;
-    border: 1px solid #384049;
-    background: #15171b;
-    display: block;
-    width: 100%;
-    color: white;
-    transition: all 0.3s ease;
-    font-size: 1.2em;
-    line-height: 1;
-    padding: 0.3em 0.4em;
-    margin: 0 0.5em 1em 0;
-}
 
-#search > input[type=text]::-webkit-input-placeholder{
-    color: #343b44;
-    line-height: 1.2;
-    -webkit-transition: all 0.2s ease;
-    transition: all 0.2s ease;
-}
 
 input[type=text]:hover {
     border-color: #4e5966;
 }
 
-.search {
-    margin: 1em auto;
-    padding: 2em;
-    width: 25em;
-    border-radius: 2px;
-    border-color: #2d333b;
-    background: #1b1f24;
-    box-shadow: 0 2px 2px #131518;
-}
+
 
 .button-list {
     width: 150px;
@@ -189,63 +166,16 @@ input[type=text]:hover {
   margin-top: 20px;
 }
 
-.search-result .no-result{
-    margin: 1em auto;
-    padding: 2em;
-    width: 25em;
-    align-items: center;
-}
 
-#search-albums h1, h2 {
-    color: white;
-    text-align: center;
-    margin-top: 30px;
-    font-size: 26px;
-    font-family: 'Lato', serif;
-    text-shadow: 5px 2px black;
-}
 
-.search-result .no-result {
-    font-size: 40px;
-    color: #45a29e;
-    font-weight: bolder;
-    text-align: center;
-    margin-top: 30px;
-    text-shadow: 2px 2px black solid;
-}
-
-.search-result .card-box {
-    box-shadow: 0 0 30px 0;
-    background-position: right 35% bottom 45%;
-    box-sizing: border-box;
-    border-radius: 15px;
-    float: left;
-    height: 550px;
-    color: white;
-    font-weight: bold;
-    margin-bottom: 70px;
-    margin-top: 20px;
-
-}
-
-#searchPage > h1 {
-    color: white;
-    text-align: center;
-    margin-top: 30px;
-    font-size: 26px;
-    font-family: 'Lato', serif;
-    text-shadow: 5px 2px black;
-}
 
 #content {
     margin-top: 0;
     padding: 10px;
-    background: gray;
     display: flex;
 }
 
 #content #sidebar {
-    background: black;
     width: 180px;
     padding: 10px;
     flex: 0 0 auto;
@@ -253,8 +183,7 @@ input[type=text]:hover {
 
 #content #products {
     background-color: orange;
-    flex-grow: 1;
-    margin-left: 10px;
+    flex-grow: 2;
+    margin-left: 20px;
     padding: 10px;
-
 }

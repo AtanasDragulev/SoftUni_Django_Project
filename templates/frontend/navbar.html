@@ -1,0 +1,33 @@
+{% load static %}
+{% load custom_filters %}
+
+
+<div>
+
+    <nav>
+        <div class="content">
+            <div id="sidebar" class="sidebar">
+                {% include 'frontend/sidebar.html' %}
+            </div>
+        </div>
+
+        <ul id="box" class="nav-items">
+            <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+
+            {% if not request.user.is_authenticated %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'login_user' %}">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'register_user' %}">Register</a></li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'profile_details' pk=user.pk %}">Profile</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'logout_user' %}">Logout</a></li>
+            {% endif %}
+            {% if request.user|in_group:'Staff' %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">BackOffice</a>
+            {% endif %}
+
+            </li>
+        </ul>
+    </nav>
+</div>
+
