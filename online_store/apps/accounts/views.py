@@ -1,11 +1,11 @@
 from django.contrib.auth import views as auth_views, login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages import success
+
 from django.urls import reverse_lazy
 from django.views import generic as views
 
 from online_store.apps.accounts.forms import RegisterUserForm, AddAddressForm
-from online_store.apps.accounts.models import StoreUser, Profile, Address
+from online_store.apps.accounts.models import Profile, Address
 
 UserModel = get_user_model()
 

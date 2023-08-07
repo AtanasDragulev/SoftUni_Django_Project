@@ -1,6 +1,5 @@
 from django import forms
 from django.forms import inlineformset_factory
-
 from online_store.apps.core.models import Product, ProductAttribute
 from online_store.apps.inventory.models import Inventory, Delivery
 from online_store.apps.sales.models import Order
@@ -10,6 +9,10 @@ class DeliveryForm(forms.ModelForm):
     class Meta:
         model = Delivery
         fields = ['delivery_number', 'invoice_number', 'delivery_date', 'cost']
+        widgets = {
+            'delivery_date': forms.TextInput(attrs={'type': 'date'}),
+
+        }
 
 
 class InventoryForm(forms.ModelForm):

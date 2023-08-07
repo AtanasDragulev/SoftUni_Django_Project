@@ -1,6 +1,10 @@
 from django.contrib.auth.hashers import make_password
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.contrib.auth import models as auth_models
+
+from online_store.tools.custom_validators import validate_characters_only, validate_characters_digits_only, \
+    validate_numbers_plus_sign_only
 
 
 class StoreUserManager(auth_models.BaseUserManager):
@@ -50,9 +54,28 @@ class StoreUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
 
 
 class Profile(models.Model):
+    FIRST_NAME_MAX_LENGTH = 50
+    FIRST_NAME_MIN_LENGTH = 2
+    LAST_NAME_MAX_LENGTH = 50
+    LAST_NAME_MIN_LENGTH = 2
+
     user = models.OneToOneField(StoreUser, on_delete=models.CASCADE, primary_key=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(
+        max_length=FIRST_NAME_MAX_LENGTH,
+        validators=(
+            MinLengthValidator(FIRST_NAME_MIN_LENGTH,
+                               message=f"First name cannot have less than {FIRST_NAME_MIN_LENGTH} characters"),
+            validate_characters_only,
+        )
+    )
+    last_name = models.CharField(
+        max_length=LAST_NAME_MAX_LENGTH,
+        validators=(
+            MinLengthValidator(FIRST_NAME_MIN_LENGTH,
+                               message=f"Last name cannot have less than {LAST_NAME_MIN_LENGTH} characters"),
+            validate_characters_only,
+        )
+    )
     discount_modifier = models.SmallIntegerField(default=1)
 
     def __str__(self):
@@ -60,17 +83,24 @@ class Profile(models.Model):
 
 
 class Address(models.Model):
+    COUNTRY_MAX_LENGTH = 56
+    COUNTRY_MIN_LENGTH = 4
+
     user = models.ForeignKey(StoreUser, on_delete=models.CASCADE)
-    country = models.CharField(max_length=56)
-    state = models.CharField(max_length=60)
-    city = models.CharField(max_length=60)
-    address = models.CharField(max_length=100)
+    country = models.CharField(
+        max_length=COUNTRY_MAX_LENGTH,
+        validators=(
+            MinLengthValidator(COUNTRY_MIN_LENGTH,
+                               message=f"There is no country with less than {COUNTRY_MIN_LENGTH} characters"),
+            validate_characters_only,
+        )
+    )
+    state = models.CharField(max_length=60, validators=(validate_characters_only,))
+    city = models.CharField(max_length=60, validators=(validate_characters_only,))
+    address = models.CharField(max_length=100, validators=(validate_characters_digits_only,))
     postal_code = models.CharField(max_length=10)
-    phone_number = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=15, validators=(validate_numbers_plus_sign_only,))
     primary = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.city} {self.address} {self.country}"
-
-
-

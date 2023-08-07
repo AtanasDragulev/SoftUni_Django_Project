@@ -1,27 +1,37 @@
 from django import forms
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.forms import inlineformset_factory
 from django.template.defaultfilters import slugify
 
-from online_store.apps.core.models import CategoryAttribute, Brand, Category, User, Product, ProductAttribute
+from online_store.apps.core.models import CategoryAttribute, Brand, Product, ProductAttribute
+from online_store.tools.custom_validators import validate_image_size
 
 
 class ProductCreationForm(forms.Form):
+    NAME_MAX_LENGTH = 60
+    NAME_MIN_LENGTH = 2
+
     def __init__(self, category, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['name'] = forms.CharField(label='Product Name')
+        self.fields['name'] = forms.CharField(
+            label='Product Name', validators=(
+                MinLengthValidator(
+                    ProductCreationForm.NAME_MIN_LENGTH,
+                    message=f"The product name must be a minimum of {ProductCreationForm.NAME_MIN_LENGTH} chars"),)
+        )
         self.fields['brand'] = forms.ModelChoiceField(label='Brand', queryset=Brand.objects.all())
         self.fields['category'] = forms.CharField(label='Category', disabled=True, initial=category.name)
-        self.fields['image'] = forms.ImageField(label='Product Image')
+        self.fields['image'] = forms.ImageField(label='Product Image', validators=(validate_image_size,))
         self.fields['description'] = forms.CharField(label='Product Description')
-        self.fields['price'] = forms.DecimalField(label='Product Price')
+        self.fields['price'] = forms.DecimalField(
+            label='Product Price', validators=(
+                MinValueValidator(0.1, message="Product price cannot be negative or zero"),)
+        )
 
         self.category = category
         category_attributes = CategoryAttribute.objects.filter(category=category)
         for attribute in category_attributes:
             self.fields[attribute.name] = forms.CharField(empty_value=attribute.name)
-
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
 
     def clean(self):
         cleaned_data = super().clean()

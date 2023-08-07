@@ -7,6 +7,7 @@ from .models import Category, Brand, Product, CategoryAttribute, ProductAttribut
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('indented_name',)
     ordering = ("order", 'created_at')
+    search_fields = ('name',)
 
     def indented_name(self, obj):
         if obj.parent_category_id is not None:
@@ -26,6 +27,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('category', 'brand', 'name', 'quantity', 'price', 'created_by')
     ordering = ("category", '-quantity')
     list_filter = ('category', 'brand', )
+    search_fields = ('name',)
 
 
 @admin.register(CategoryAttribute)
