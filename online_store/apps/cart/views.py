@@ -52,6 +52,8 @@ class UpdateCartView(View):
 
         cart = request.session.get('cart', {})
         quantity = cart.get(str(product_id), 0)
+        if Product.objects.get(pk=product_id).quantity < 1:
+            return JsonResponse({'message': 'No stock available', "quantity": 0})
 
         if action == 'add' and quantity < Product.objects.get(pk=product_id).quantity:
             quantity += 1
@@ -59,7 +61,7 @@ class UpdateCartView(View):
             quantity -= 1
 
         quantity = max(quantity, 0)
-        if quantity <= 0:
+        if quantity <= 0 and str(product_id) in cart:
             del cart[str(product_id)]
 
         cart[str(product_id)] = quantity

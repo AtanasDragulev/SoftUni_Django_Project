@@ -1,0 +1,60 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+    <style>
+        #filter-sidebar {
+            height: 100%;
+            width: 200px;
+            overflow: auto;
+        }
+
+        #filter-box {
+            height: 100px;
+            overflow: auto;
+        }
+
+    </style>
+    <link rel="stylesheet" href="{% static "CSS/test/catalog.css" %}">
+{% endblock %}
+
+{% block content %}
+    {% if results %}
+        <h2>Products found: {{ results|length }} </h2>
+        <div id="product">
+            {% for product in results %}
+                <div class="card-box">
+                    <img src="{{ product.image.url }}" alt="Product Image">
+                    <div>
+                        <div class="text-center">
+                            <p class="name">{{ product.title|wordwrap:35|linebreaksbr }}</p>
+                            <p class="artist">Brand: {{ product.brand }}</p>
+                            <p class="genre">In stock: {{ product.quantity }}</p>
+                            <p class="price">Price: ${{ product.price }}</p>
+                        </div>
+                        <div class="btn-group">
+                            <a href="{% url 'product_details' slug=product.slug %}">Details</a>
+                            <button data-product="{{ product.pk }}" data-action="add" type="button"
+                                    class="btn bg-cart update-cart"><i class="fa fa-cart-plus mr-2"></i> Add to
+                                cart
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+        {% endfor %}
+        </div>
+
+    {% else %}
+        <h2>No products found</h2>
+    {% endif %}
+
+    <script>
+        var csrftoken = '{{ csrf_token }}';
+    </script>
+    <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+{% endblock %}
+
+

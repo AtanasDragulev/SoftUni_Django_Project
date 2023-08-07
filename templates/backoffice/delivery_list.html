@@ -18,13 +18,16 @@
         <div style="flex:1"><strong>Delivery Number</strong></div>
         <div style="flex:1"><strong>Invoice</strong></div>
         <div style="flex:1"><strong>Cost</strong></div>
+        <div style="flex:1"><strong>Action</strong></div>
     </div>
     {% for delivery in objects_list %}
         <div class="cart-row">
-        <div style="flex:2"><p>{{ delivery.delivery_date}}</p></div>
-        <div style="flex:1"><p>{{ delivery.delivery_number}}</p></div>
-        <div style="flex:1"><p>{{ delivery.invoice_number}}</p></div>
-        <div style="flex:1"><p>{{ delivery.cost|floatformat:2}}</p></div>
+            <div style="flex:2"><p>{{ delivery.delivery_date }}</p></div>
+            <div style="flex:1"><p>{{ delivery.delivery_number }}</p></div>
+            <div style="flex:1"><p>{{ delivery.invoice_number }}</p></div>
+            <div style="flex:1"><p>{{ delivery.cost|floatformat:2 }}</p></div>
+            <div style="flex:1"><a href="{% url 'details_delivery' delivery.pk %}">details</a></div>
+
         </div>
     {% empty %}
         <h3>No deliveries yet</h3>

@@ -1,15 +1,19 @@
 {% extends 'frontend/base.html' %}
 {% block content %}
-    {{ request.user }}
+    <div class="auth">
 
-    <form action="{% url 'register_user' %}" method="post">
-        <div class="col border  align-items-center justify-content-center">
+        <form class="auth-box" action="{% url 'register_user' %}" method="post">
+
+
+            {{ form }}
+
+            <div>
+                <button>Register</button>
+                or
+                <a href="{% url 'login_user' %}">Login</a>
+
+            </div>
             {% csrf_token %}
-            {{ form.as_p }}
-            <button>Register</button>
-            or
-            <a href="{% url 'login_user' %}">Login</a>
-
-        </div>
-    </form>
+        </form>
+    </div>
 {% endblock %}

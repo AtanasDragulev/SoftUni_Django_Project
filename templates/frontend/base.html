@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    {#    <link rel="stylesheet" href="{% static 'css/products.css' %}">#}
+
     {% block extrahead %}{% endblock %}
 
 </head>
@@ -14,8 +14,13 @@
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 {% include 'frontend/header.html' %}
 {% include 'frontend/navbar.html' %}
-{% block content %}
+<div class="wrapper">
+    {% block content %}
 
-{% endblock %}
+    {% endblock %}
+</div>
+<footer>
+    {% include 'frontend/footer.html' %}
+</footer>
 </body>
 </html>

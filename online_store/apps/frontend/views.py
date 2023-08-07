@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -25,7 +26,7 @@ class Index(TemplateView):
 
 
 class CategoryProductsView(TemplateView):
-    template_name = 'frontend/category_products.html'
+    template_name = 'frontend/catalogue/category_products.html'
 
     def get_context_data(self, category_name, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -65,11 +66,11 @@ def create_product(request, category_name):
         'form': form,
     }
 
-    return render(request, 'frontend/create_product.html', context)
+    return render(request, 'frontend/product/create_product.html', context)
 
 
 class ProductDetailView(TemplateView):
-    template_name = 'frontend/product_detail.html'
+    template_name = 'frontend/product/product_detail.html'
 
     def get_context_data(self, slug, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -99,13 +100,13 @@ def edit_product(request, slug):
         'form': form,
         'formset': formset,
     }
-    return render(request, 'frontend/product_edit.html', context)
+    return render(request, 'frontend/product/product_edit.html', context)
 
 
 class ProductDeleteView(AccessRequiredMixin, DeleteView):
     REQUIRED_GROUP = "Admins"
     model = Product
-    template_name = 'frontend/product_delete.html'
+    template_name = 'frontend/product/product_delete.html'
 
     def get_success_url(self):
         product = self.get_object()
@@ -113,7 +114,7 @@ class ProductDeleteView(AccessRequiredMixin, DeleteView):
 
 
 class SearchResultsView(FormView):
-    template_name = 'frontend/search_results.html'
+    template_name = 'frontend/catalogue/search_results.html'
     form_class = SearchForm
     model = Product
 
@@ -126,24 +127,34 @@ class SearchResultsView(FormView):
 
 def products_by_category(request, category_name):
     category = Category.objects.get(name=category_name)
-    products = Product.objects.filter(category=category)
-    attributes = ProductAttribute.objects.filter(product__category=category)
+    products = Product.objects.filter(category=category, active=True)
+    attributes = ProductAttribute.objects.filter(product__category=category).order_by('product__modified_at')
     attribute_groups = get_attribute_filters(attributes)
+    paginator = Paginator(products, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     if request.method == 'POST':
 
         filtered_products = []
         filter_set = request.POST
+
         for name, value in filter_set.items():
             filtered_products.append(set(products.filter(productattribute__name=name, productattribute__value=value)))
-        products = list(set.intersection(*map(set, [x for x in filtered_products if x])))
-        attributes = ProductAttribute.objects.filter(product__category=category)
-        attribute_groups = get_attribute_filters(attributes)
+
+        if len(filtered_products) > 1:
+            products = list(set.intersection(*map(set, [x for x in filtered_products if x])))
+            attributes = ProductAttribute.objects.filter(product__category=category)
+            attribute_groups = get_attribute_filters(attributes)
+            paginator = Paginator(products, 10)
+            page_number = request.GET.get("page")
+            page_obj = paginator.get_page(page_number)
 
     context = {
         'category': category,
         'products': products,
         'attribute_groups': attribute_groups,
+        'page_obj': page_obj,
 
     }
-    return render(request, 'frontend/filters.html', context)
+    return render(request, 'frontend/catalogue/category_products.html', context)

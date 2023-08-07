@@ -1,19 +1,21 @@
 {% extends 'frontend/base.html' %}
 {% block content %}
-    <form
-            action="{% url 'login_user'  %}?next={{ next }}"
-            method="post">
+    <div class="auth">
 
-        {{ form.as_p }}
+        <form class="auth-box" id="login" action="{% url 'login_user' %}?next={{ next }}" method="post">
 
-        <input type="hidden" value="{{ next }}" name="next"/>
+            {{ form }}
 
-        <div>
-            <button>Login</button>
-            or
-            <a href="{% url 'register_user' %}">Register</a>
-        </div>
 
-        {% csrf_token %}
-    </form>
+            <input type="hidden" value="{{ next }}" name="next"/>
+
+            <div id="auth-btn">
+                <button>Login</button>
+                or
+                <a href="{% url 'register_user' %}">Register</a>
+            </div>
+
+            {% csrf_token %}
+        </form>
+    </div>
 {% endblock %}

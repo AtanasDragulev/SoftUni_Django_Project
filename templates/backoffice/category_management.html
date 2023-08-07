@@ -28,6 +28,12 @@
 {% block content %}
     <h2>Categories:</h2>
     <input type="text" id="searchInput" placeholder="Search by name...">
+    <div>
+        <br>
+        <a href="{% url 'category_create' %}">
+            <button>Create category</button>
+        </a>
+    </div>
     <table>
 
         <div class="cart-row">

@@ -1,0 +1,60 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% block content %}
+    {% load custom_filters %}
+    <div class="product-page">
+        <img id="product-image" src="{{ product.image.url }}" alt="product image">
+        <div id="product-main">
+            <h1>{{ product.title }}</h1>
+            <h3>Brand: {{ product.brand }}</h3>
+            <h3>Category: {{ product.category }}</h3>
+
+
+
+            {% if attributes %}
+
+                <table class="product-attributes">
+                    <h3>Product details:</h3>
+                    {% for attribute in attributes %}
+                        <tr>
+                            <td>{{ attribute.name }}</td>
+                            <td> {{ attribute.value }}</td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% endif %}
+
+            <h3 id="product-price">Price: ${{ product.price }}</h3>
+
+            <div id="product-tocart">
+                <button data-product="{{ product.pk }}" data-action="add" type="button"
+                        class="btn bg-cart update-cart"><i class="fa fa-cart-plus mr-2"></i> Add to
+                    cart
+                </button>
+            </div>
+
+        </div>
+        <div id="product-description">
+            <h3 id>Description:</h3>
+            <p>{{ product.description| safe | linebreaksbr }}</p>
+        </div>
+        {% if request.user|in_group:'Staff' and product.created_by == request.user %}
+            <a href="{% url 'edit_product' product.slug %}">
+                <button id="edit-btn">Edit Product</button>
+            </a>
+
+            <a href="{% url 'delete_product' product.slug %}">
+                <button id="delete-btn">Delete Product</button>
+            </a>
+        {% endif %}
+
+        <script>
+            var csrftoken = '{{ csrf_token }}';
+        </script>
+
+        <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+
+    </div>
+
+{% endblock %}

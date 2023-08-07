@@ -6,6 +6,7 @@ urlpatterns = (
     path('', Dashboard.as_view(), name='dashboard'),
     path('delivery/create', create_delivery_view, name='create_delivery'),
     path('delivery/view', DeliveryList.as_view(), name='view_delivery'),
+    path('delivery/details/<int:delivery_id>', DeliveryDetailView.as_view(), name='details_delivery'),
 
     path('orders/view', OrderManagementView.as_view(), name='orders_view'),
     path('orders/process/<int:pk>', OrderProcessView.as_view(), name='order_process'),
@@ -14,6 +15,7 @@ urlpatterns = (
 
     path('categories', CategoryManagementView.as_view(), name='category_management'),
     path('categories/edit/<int:pk>', EditCategoryView.as_view(), name='category_edit'),
+    path('categories/create/', CreateCategoryView.as_view(), name='category_create'),
 
     path('products', ProductManagementView.as_view(), name='product_management'),
     path('products/create', CreateProductView.as_view(), name='product_create'),

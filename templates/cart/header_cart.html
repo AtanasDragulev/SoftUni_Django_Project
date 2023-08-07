@@ -1,9 +1,9 @@
-{% include 'frontend/base.html' %}
+{% include 'frontend/header.html' %}
+{% include 'frontend/navbar.html' %}
 {% load static %}
 {% block extrahead %}
     <head>
-        <title>Ecom</title>
-
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
 
 
@@ -63,6 +63,7 @@
 
     </head>
 {% endblock %}
+<div class="wrapper">
 {% block content %}
 
 
@@ -86,4 +87,9 @@
             crossorigin="anonymous"></script>
 
     <script type="text/javascript" src="{% static 'js/cart.js' %}"></script>
+    <br>
 {% endblock %}
+</div>
+<footer>
+    {% include 'frontend/footer.html' %}
+</footer>

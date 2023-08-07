@@ -1,11 +1,14 @@
 {% extends 'frontend/base.html' %}
 
 {% block content %}
-    <form action="{% url 'edit_profile' pk=user.pk %}" method="post">
-        <div class="col border  align-items-center justify-content-center">
+    <div class="auth">
+        <form class="auth-box" action="{% url 'edit_profile' pk=user.pk %}" method="post">
+
             {% csrf_token %}
-            {{ form.as_p }}
-            <button>Save</button>
-        </div>
-    </form>
+            {{ form }}
+            <div id="auth-btn">
+                <button id="profile-save" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

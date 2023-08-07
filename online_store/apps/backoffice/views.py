@@ -37,8 +37,17 @@ def create_delivery_view(request):
         delivery_form = DeliveryForm(request.POST)
         forms_count = sum(1 for key in request.POST if key.startswith('form-')) / 5
         inventory_forms = [InventoryForm(request.POST, prefix=f'form-{i}') for i in range(int(forms_count))]
+
         if delivery_form.is_valid() and all(form.is_valid() for form in inventory_forms):
-            delivery = delivery_form.save()
+            if delivery_form.cleaned_data['cost'] != sum(form.cleaned_data['cost'] for form in inventory_forms):
+                raise ValidationError("The total delivery amount is different from the sum of items cost")
+            delivery = Delivery.objects.create(
+                delivery_number=delivery_form.cleaned_data['delivery_number'],
+                invoice_number=delivery_form.cleaned_data['invoice_number'],
+                delivery_date=delivery_form.cleaned_data['delivery_date'],
+                cost=delivery_form.cleaned_data['cost'],
+                created_by=request.user
+            )
 
             for form in inventory_forms:
                 inventory = form.save(commit=False)
@@ -51,13 +60,12 @@ def create_delivery_view(request):
                     inventory.in_stock = True
                     inventory.save()
                 except Product.DoesNotExist:
-
                     raise ValidationError('Product does not exist')
 
             return redirect('dashboard')
     else:
         delivery_form = DeliveryForm()
-        inventory_forms = [InventoryForm(prefix=f'form-{i}') for i in range(3)]
+        inventory_forms = [InventoryForm(prefix=f'form-{i}') for i in range(1)]
 
     return render(request, 'backoffice/create_delivery.html', {
         'delivery_form': delivery_form,
@@ -68,16 +76,26 @@ def create_delivery_view(request):
 class DeliveryList(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Staff"
     model = Delivery
-    paginate_by = 30
     template_name = 'backoffice/delivery_list.html'
     context_object_name = 'objects_list'
+
+
+class DeliveryDetailView(AccessRequiredMixin, views.ListView):
+    REQUIRED_GROUP = "Staff"
+    model = Inventory
+    template_name = 'backoffice/delivery_details.html'
+    context_object_name = 'objects_list'
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        delivery_id = self.kwargs['delivery_id']
+        return queryset.filter(delivery_id=delivery_id)
 
 
 class UserManagement(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Admins"
     model = UserModel
     template_name = 'backoffice/user_management.html'
-    paginate_by = 20
 
 
 class UserPermissionsView(AccessRequiredMixin, views.View):
@@ -110,6 +128,15 @@ class CategoryManagementView(AccessRequiredMixin, views.ListView):
 class CreateCategoryView(AccessRequiredMixin, views.CreateView):
     REQUIRED_GROUP = "Managers"
     model = Category
+    fields = ('name', 'parent_category', 'order',)
+    template_name = 'backoffice/category_create.html'
+    success_url = reverse_lazy('category_management')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        categories = Category.objects.filter(parent_category=None)
+        form.fields['parent_category'].queryset = categories
+        return form
 
 
 class EditCategoryView(AccessRequiredMixin, views.UpdateView):
@@ -118,6 +145,13 @@ class EditCategoryView(AccessRequiredMixin, views.UpdateView):
     fields = ('name', 'parent_category', 'order',)
     template_name = 'backoffice/category_edit.html'
     success_url = reverse_lazy('category_management')
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        categories = Category.objects.filter(parent_category=None)
+        categories.exclude(pk=self.object.pk)
+        form.fields['parent_category'].queryset = categories
+        return form
 
 
 class ProductManagementView(AccessRequiredMixin, views.ListView):
