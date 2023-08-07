@@ -9,7 +9,7 @@ from django.views.generic.base import TemplateView
 from .forms import ProductCreationForm, ProductForm, ProductAttributeFormSet, SearchForm
 from online_store.tools.access_control import AccessRequiredMixin, group_required
 
-from ..core.models import Category, Product, ProductAttribute
+from ..core.models import Category, Product, ProductAttribute, ProductLike, Wishlist
 from online_store.tools.functions import get_attribute_filters
 
 main_categories = Category.objects.filter(parent_category__isnull=True)
@@ -76,7 +76,17 @@ class ProductDetailView(TemplateView):
         context = super().get_context_data(**kwargs)
         product = get_object_or_404(Product, slug=slug)
         attributes = product.productattribute_set.all()
-        context.update({'product': product, 'attributes': attributes})
+        liked = ProductLike.objects.filter(product=product, user=self.request.user).exists()
+        wished = Wishlist.objects.filter(product=product, user=self.request.user).exists()
+        total_likes = product.productlike_set.count()
+        context.update(
+            {'product': product,
+             'attributes': attributes,
+             'total_likes': total_likes,
+             'liked': liked,
+             'wished': wished,
+             }
+        )
         return context
 
 
@@ -158,3 +168,47 @@ def products_by_category(request, category_name):
 
     }
     return render(request, 'frontend/catalogue/category_products.html', context)
+
+
+@login_required
+def like_product(request, slug):
+    product = Product.objects.get(slug=slug)
+
+    kwargs = {
+        'product': product,
+        'user': request.user
+    }
+
+    liked = ProductLike.objects \
+        .filter(**kwargs) \
+        .first()
+
+    if liked:
+        liked.delete()
+    else:
+        new_like_object = ProductLike(**kwargs)
+        new_like_object.save()
+
+    return redirect(request.META['HTTP_REFERER'] + f"#{slug}")
+
+
+@login_required
+def add_wishlist(request, slug):
+    product = Product.objects.get(slug=slug)
+
+    kwargs = {
+        'product': product,
+        'user': request.user
+    }
+
+    wished = Wishlist.objects \
+        .filter(**kwargs) \
+        .first()
+
+    if wished:
+        wished.delete()
+    else:
+        new_wished_object = Wishlist(**kwargs)
+        new_wished_object.save()
+
+    return redirect(request.META['HTTP_REFERER'] + f"#{slug}")

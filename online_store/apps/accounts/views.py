@@ -6,6 +6,7 @@ from django.views import generic as views
 
 from online_store.apps.accounts.forms import RegisterUserForm, AddAddressForm
 from online_store.apps.accounts.models import Profile, Address
+from online_store.apps.core.models import Wishlist
 
 UserModel = get_user_model()
 
@@ -37,6 +38,12 @@ class ProfileDetails(views.DetailView):
     model = Profile
     template_name = 'accounts/profile.html'
     fields = '__all__'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        wishlist = Wishlist.objects.filter(user=self.request.user)
+        context.update({'wishlist': wishlist})
+        return context
 
 
 class ProfileEdit(views.UpdateView):

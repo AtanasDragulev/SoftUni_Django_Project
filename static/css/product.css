@@ -79,3 +79,39 @@ tr:nth-child(even) {
     color: white;
 
 }
+
+
+.wishlist {
+    padding-left: 50%;
+
+
+}
+
+#add-to-wishlist {
+    color: white;
+    background-color: lightgreen;
+    border: 0;
+    border-radius: 12px;
+    width: 120px;
+    height: 50px;
+}
+
+#add-to-wishlist {
+    color: blue;
+    font-size: 16px;
+    background-color: lightgreen;
+    border: 0;
+    border-radius: 12px;
+    width: 120px;
+    height: 50px;
+}
+
+#remove-from-wishlist {
+    color: white;
+    font-size: 16px;
+    background-color: orangered;
+    border: 0;
+    border-radius: 12px;
+    width: 120px;
+    height: 50px;
+}

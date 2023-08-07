@@ -3,7 +3,6 @@ from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 
-
 User = get_user_model()
 
 
@@ -136,3 +135,13 @@ class ProductAttribute(models.Model):
 
     def __str__(self):
         return f"{self.product} - {self.name}: {self.value}"
+
+
+class ProductLike(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+
+
+class Wishlist(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)

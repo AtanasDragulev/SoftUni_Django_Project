@@ -1,33 +1,48 @@
 {% extends 'frontend/base.html' %}
 
 {% block content %}
+    <div class="details-page">
+        <div class="profile">
+            <h4>User details</h4>
+            <div>First Name: {{ object.first_name }}</div>
+            <div>Last Name: {{ object.last_name }}</div>
+            <div>Email: {{ object.user.email }}</div>
 
-    <div class="profile">
-        <h4>User details</h4>
-        <div>First Name: {{ object.first_name }}</div>
-        <div>Last Name: {{ object.last_name }}</div>
-        <div>Email: {{ object.user.email }}</div>
-
-        <div>
-            <a href="{% url "edit_profile" pk=request.user.pk %}">
-                <button>Edit Profile</button>
-            </a>
+            <div>
+                <a href="{% url "edit_profile" pk=request.user.pk %}">
+                    <button>Edit Profile</button>
+                </a>
+            </div>
         </div>
-    </div>
-    <div class="addressbox">
-        <h4>Addresses</h4>
-        {% for address in user.address_set.all %}
-            <p>{{ address }} <a href="{% url 'delete_adress' pk=address.pk %}">delete</a></p>
-        {% empty %}
-            <p>No shipping adresses</p>
-        {% endfor %}
-        <div>
-            <a href="{% url "add_address" %}">
-                <button>Add new adress</button>
-            </a>
+        <div class="addressbox">
+            <h4>Addresses</h4>
+            {% for address in user.address_set.all %}
+                <p>{{ address }} <a href="{% url 'delete_adress' pk=address.pk %}">delete</a></p>
+            {% empty %}
+                <p>No shipping adresses</p>
+            {% endfor %}
+            <div>
+                <a href="{% url "add_address" %}">
+                    <button>Add new adress</button>
+                </a>
+            </div>
         </div>
+
     </div>
+        <div class="profile-wishlist">
+            <div><h4>Wishlist</h4></div>
 
+            {% for product in wishlist %}
+                <div class="wish-card">
+                <a href="{% url 'product_details' product.product.slug %}">
+                    <img src="{{ product.product.image.url }}" width="130" height="130">
+                    <div>{{ product.product.name }}</div>
+                </a>
+                </div>
+            {% empty %}
+                <p>No products in wishlist</p>
+            {% endfor %}
 
+        </div>
 
 {% endblock %}
