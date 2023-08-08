@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from online_store.apps.core.models import Product, ProductAttribute
+from online_store.apps.core.models import Product, ProductAttribute, Category, CategoryAttribute
 from online_store.apps.inventory.models import Inventory, Delivery
 from online_store.apps.sales.models import Order
 
@@ -45,4 +45,11 @@ ProductAttributeFormSet = inlineformset_factory(
     extra=0,
     can_delete=False,
     labels={'name': '', 'value': ''}
+)
+
+CategoryAttributeFormSet = inlineformset_factory(
+    Category,
+    CategoryAttribute,
+    fields=('name',),
+    extra=0,
 )

@@ -1,5 +1,6 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
+{% load custom_filters %}
 {% block extrahead %}
     <style>
         #filter-sidebar {
@@ -19,7 +20,12 @@
 
 
 {% block content %}
-    <h1 class="category-title">{{ category.name }}</h1>
+    <h1 class="category-title">{{ category.name }}
+        {% if request.user|in_group:'Staff' %}
+            <a href="{% url 'create_product' category_name=category.name %}">
+                <button type="button" class="btn btn-primary">Create Product</button>
+            </a>
+        {% endif %}</h1>
 
 
     <div id="content">

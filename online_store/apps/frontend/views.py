@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,6 +12,7 @@ from online_store.tools.access_control import AccessRequiredMixin, group_require
 
 from ..core.models import Category, Product, ProductAttribute, ProductLike, Wishlist
 from online_store.tools.functions import get_attribute_filters
+from ..inventory.models import Inventory
 
 main_categories = Category.objects.filter(parent_category__isnull=True)
 
@@ -94,6 +96,8 @@ class ProductDetailView(TemplateView):
 @group_required("Staff")
 def edit_product(request, slug):
     product = get_object_or_404(Product, slug=slug)
+    if product.created_by != request.user:
+        raise PermissionDenied
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product)
         formset = ProductAttributeFormSet(request.POST, instance=product)
@@ -114,13 +118,22 @@ def edit_product(request, slug):
 
 
 class ProductDeleteView(AccessRequiredMixin, DeleteView):
-    REQUIRED_GROUP = "Admins"
+    REQUIRED_GROUP = "Staff"
     model = Product
     template_name = 'frontend/product/product_delete.html'
 
     def get_success_url(self):
         product = self.get_object()
         return reverse_lazy('category_products', kwargs={'category_name': product.category.name})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        has_items = Inventory.objects.filter(product=product).exists()
+        context.update({'canot_delete': has_items, "message": 'You cannot delete product that has items'})
+        if product.created_by != self.request.user:
+            context.update({'canot_delete': True, "message": 'You are not the product creator'})
+        return context
 
 
 class SearchResultsView(FormView):

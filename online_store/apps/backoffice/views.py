@@ -17,7 +17,6 @@ from online_store.apps.sales.models import Order, OrderItem
 UserModel = get_user_model()
 
 
-# Create your views here.
 class Dashboard(AccessRequiredMixin, views.TemplateView):
     REQUIRED_GROUP = "Staff"
     template_name = 'backoffice/dashboard.html'
@@ -26,7 +25,7 @@ class Dashboard(AccessRequiredMixin, views.TemplateView):
 class CreateDelivery(AccessRequiredMixin, views.CreateView):
     REQUIRED_GROUP = "Staff"
     model = Delivery
-    template_name = 'backoffice/create_delivery.html'
+    template_name = 'backoffice/delivery/create_delivery.html'
     success_url = reverse_lazy('dashboard')
     fields = '__all__'
 
@@ -67,7 +66,7 @@ def create_delivery_view(request):
         delivery_form = DeliveryForm()
         inventory_forms = [InventoryForm(prefix=f'form-{i}') for i in range(1)]
 
-    return render(request, 'backoffice/create_delivery.html', {
+    return render(request, 'backoffice/delivery/create_delivery.html', {
         'delivery_form': delivery_form,
         'inventory_forms': inventory_forms,
     })
@@ -76,14 +75,14 @@ def create_delivery_view(request):
 class DeliveryList(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Staff"
     model = Delivery
-    template_name = 'backoffice/delivery_list.html'
+    template_name = 'backoffice/delivery/delivery_list.html'
     context_object_name = 'objects_list'
 
 
 class DeliveryDetailView(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Staff"
     model = Inventory
-    template_name = 'backoffice/delivery_details.html'
+    template_name = 'backoffice/delivery/delivery_details.html'
     context_object_name = 'objects_list'
 
     def get_queryset(self):
@@ -95,12 +94,12 @@ class DeliveryDetailView(AccessRequiredMixin, views.ListView):
 class UserManagement(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Admins"
     model = UserModel
-    template_name = 'backoffice/user_management.html'
+    template_name = 'backoffice/user/user_management.html'
 
 
 class UserPermissionsView(AccessRequiredMixin, views.View):
     REQUIRED_GROUP = "Admins"
-    template_name = 'backoffice/user_permissions.html'
+    template_name = 'backoffice/user/user_permissions.html'
 
     def get(self, request, user_pk):
         user = get_object_or_404(UserModel, pk=user_pk)
@@ -122,15 +121,23 @@ class UserPermissionsView(AccessRequiredMixin, views.View):
 class CategoryManagementView(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Managers"
     model = Category
-    template_name = 'backoffice/category_management.html'
+    template_name = 'backoffice/category/category_management.html'
 
 
 class CreateCategoryView(AccessRequiredMixin, views.CreateView):
     REQUIRED_GROUP = "Managers"
     model = Category
     fields = ('name', 'parent_category', 'order',)
-    template_name = 'backoffice/category_create.html'
+    template_name = 'backoffice/category/category_create.html'
     success_url = reverse_lazy('category_management')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['attribute_formset'] = CategoryAttributeFormSet(self.request.POST)
+        else:
+            context['attribute_formset'] = CategoryAttributeFormSet()
+        return context
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -138,12 +145,28 @@ class CreateCategoryView(AccessRequiredMixin, views.CreateView):
         form.fields['parent_category'].queryset = categories
         return form
 
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        context = self.get_context_data()
+        attribute_formset = context['attribute_formset']
+        category = form.save()
+        if attribute_formset.is_valid():
+            for form in attribute_formset:
+                a = form
+                if form.cleaned_data.get('name'):
+                    attribute = form.save(commit=False)
+                    attribute.category = category
+                    attribute.save()
+            return super().form_valid(form)
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
+
 
 class EditCategoryView(AccessRequiredMixin, views.UpdateView):
     REQUIRED_GROUP = "Managers"
     model = Category
     fields = ('name', 'parent_category', 'order',)
-    template_name = 'backoffice/category_edit.html'
+    template_name = 'backoffice/category/category_edit.html'
     success_url = reverse_lazy('category_management')
 
     def get_form(self, form_class=None):
@@ -157,21 +180,21 @@ class EditCategoryView(AccessRequiredMixin, views.UpdateView):
 class ProductManagementView(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Staff"
     model = Product
-    template_name = 'backoffice/product_management.html'
+    template_name = 'backoffice/product/product_management.html'
 
 
 class CreateProductView(AccessRequiredMixin, views.CreateView):
     REQUIRED_GROUP = "Staff"
     model = Product
     fields = '__all__'
-    template_name = 'backoffice/product_create.html'
+    template_name = 'backoffice/product/product_create.html'
 
 
 class DeactivateProductView(AccessRequiredMixin, views.UpdateView):
     REQUIRED_GROUP = "Staff"
     model = Product
     fields = []
-    template_name = 'backoffice/product_deactivate.html'
+    template_name = 'backoffice/product/product_deactivate.html'
     success_url = reverse_lazy('product_management')
 
     def form_valid(self, form):
@@ -202,13 +225,13 @@ def edit_product(request, pk):
         'form': form,
         'formset': formset,
     }
-    return render(request, 'backoffice/product_edit.html', context)
+    return render(request, 'backoffice/product/product_edit.html', context)
 
 
 class DeleteProductView(AccessRequiredMixin, views.DeleteView):
     REQUIRED_GROUP = "Managers"
     model = Product
-    template_name = 'backoffice/product_delete.html'
+    template_name = 'backoffice/product/product_delete.html'
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -220,13 +243,13 @@ class DeleteProductView(AccessRequiredMixin, views.DeleteView):
 class OrderManagementView(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Staff"
     model = Order
-    template_name = 'backoffice/order_management.html'
+    template_name = 'backoffice/order/order_management.html'
 
 
 class OrderProcessView(AccessRequiredMixin, views.UpdateView):
     REQUIRED_GROUP = "Staff"
     model = Order
-    template_name = 'backoffice/order_process.html'
+    template_name = 'backoffice/order/order_process.html'
     form_class = OrderForm
     success_url = reverse_lazy('orders_view')
 
@@ -240,7 +263,7 @@ class OrderProcessView(AccessRequiredMixin, views.UpdateView):
 class OrderItemEditView(AccessRequiredMixin, views.UpdateView):
     REQUIRED_GROUP = "Staff"
     model = OrderItem
-    template_name = 'backoffice/orderitem_edit.html'
+    template_name = 'backoffice/order/orderitem_edit.html'
     fields = ['serial_number']
 
     def get_success_url(self):
