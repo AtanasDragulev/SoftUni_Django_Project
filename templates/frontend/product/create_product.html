@@ -2,10 +2,12 @@
 
 {% block content %}
 
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="Create Product">
-</form>
-
+    <div class="createPage">
+    <h1>Create Product</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Create Product">
+        </form>
+    </div>
 {% endblock %}
