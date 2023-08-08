@@ -1,29 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.mail import send_mail
 
-from online_store.apps.core.models import Product, CategoryAttribute, ProductAttribute
 from online_store.apps.inventory.models import Inventory
+from online_store.apps.sales.models import Order
 
+User = get_user_model()
 
-# Creates product attributes for product form cattegory attributes when created in admin site
-# @receiver(post_save, sender=Product)
-# def add_attributes_to_product(sender, instance, created, **kwargs):
-#     print(sender)
-#     if created:
-#         category_attributes = CategoryAttribute.objects.filter(category=instance.category)
-#         for category_attribute in category_attributes:
-#             ProductAttribute.objects.create(product=instance, name=category_attribute)
-
-# @receiver(post_save, sender=Product)
-# def add_attributes_to_product(sender, instance, created, **kwargs):
-#     if created:
-#         product_attributes = ProductAttribute.objects.filter(product=instance.pk)[0:5]
-#         instance.title = f"{instance.brand.name} {instance.name},"
-#         instance.title += ", ".join(a.value for a in product_attributes)
-#         print("------------------------------------------------------------------------------------------------")
-#         print(product_attributes)
-#         print("------------------------------------------------------------------------------------------------")
-#         instance.save(update_fields=['title'])
 
 @receiver(post_save, sender=Inventory)
 def increase_product_quantity(sender, instance, created, **kwargs):
@@ -32,3 +16,24 @@ def increase_product_quantity(sender, instance, created, **kwargs):
         product.quantity += 1
         product.save(update_fields=['quantity'])
 
+
+@receiver(post_save, sender=User)
+def send_welcome_email(sender, instance, created, **kwargs):
+    if created:
+        subject = 'Welcome to Our Website'
+        message = 'Thank you for joining our website!'
+        from_email = 'your_email@gmail.com'
+        recipient_list = [instance.email]
+
+        send_mail(subject, message, from_email, recipient_list)
+
+
+@receiver(post_save, sender=Order)
+def send_welcome_email(sender, instance, created, **kwargs):
+    if created:
+        subject = f'Order {instance.id} created'
+        message = f'Thank you for shopping from us\nYour order number is {instance.id}'
+        from_email = 'your_email@gmail.com'
+        recipient_list = [instance.customer.email]
+
+        send_mail(subject, message, from_email, recipient_list)

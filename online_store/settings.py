@@ -62,8 +62,8 @@ ROOT_URLCONF = 'online_store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
+
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -87,11 +87,11 @@ WSGI_APPLICATION = 'online_store.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "mydatabase",
-        "USER": "mydatabaseuser",
-        "PASSWORD": "mypassword",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "NAME": os.getenv('DB_NAME', None),
+        "USER": os.getenv('DB_USER', None),
+        "PASSWORD": os.getenv('DB_PASSWORD', None),
+        "HOST": os.getenv('DB_HOST', None),
+        "PORT": os.getenv('DB_PORT', '5432'),
     }
 }
 
@@ -112,9 +112,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-if DEBUG:
-    AUTH_PASSWORD_VALIDATORS = []
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -154,3 +151,10 @@ LOGIN_URL = reverse_lazy('login_user')
 
 # Defines the model for **Users**
 AUTH_USER_MODEL = 'accounts.StoreUser'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('SMTP_SERVER', None)
+EMAIL_USE_TLS = bool(int(os.getenv('SMTP_USE_TLS', 0)))
+EMAIL_PORT = os.getenv('SMTP_PORT', None)
+EMAIL_HOST_USER = os.getenv('SMTP_USER', None)
+EMAIL_HOST_PASSWORD = os.getenv('SMTP_PASSWORD', None)
