@@ -1,0 +1,50 @@
+{% extends 'backoffice/base.html' %}
+{% block content %}
+
+    <h2>Create Category:</h2>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+
+        <h4>Category Attributes</h4>
+        {{ attribute_formset.management_form }}
+        <div id="attribute-forms">
+            {% for form in attribute_formset %}
+                {{ form.name.label_tag }}
+                {{ form.name }}
+
+                <br>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-attribute">Add Attribute</button>
+
+        <button type="submit">Save</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const attributeFormset = document.querySelector('#attribute-forms');
+            const addButton = document.querySelector('#add-attribute');
+
+            addButton.addEventListener('click', function () {
+                const totalForms = attributeFormset.querySelectorAll('.attribute-form').length;
+                const newFormHtml = `
+            <div class="attribute-form">
+                <label for="id_categoryattribute_set-${totalForms}-name">Name:</label>
+                <input type="text" name="categoryattribute_set-${totalForms}-name" required>
+            </div>
+        `;
+                const newForm = document.createElement('div');
+                newForm.innerHTML = newFormHtml;
+                attributeFormset.appendChild(newForm);
+
+                const totalFormsField = document.getElementById('id_categoryattribute_set-TOTAL_FORMS');
+                totalFormsField.value = totalForms + 1;
+
+            });
+        });
+    </script>
+
+
+{% endblock %}
