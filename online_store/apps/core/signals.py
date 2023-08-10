@@ -3,8 +3,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
 
+from online_store.apps.core.models import Category, Product
 from online_store.apps.inventory.models import Inventory
 from online_store.apps.sales.models import Order
+from django.core.cache import cache
 
 User = get_user_model()
 
@@ -37,3 +39,9 @@ def send_welcome_email(sender, instance, created, **kwargs):
         recipient_list = [instance.customer.email]
 
         send_mail(subject, message, from_email, recipient_list)
+
+
+# @receiver(post_save, sender=Product)
+# def invalidate_product_cache(sender, instance, created, **kwargs):
+#     if created:
+#         cache.delete("products_by_category")

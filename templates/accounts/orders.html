@@ -1,0 +1,26 @@
+{% extends 'frontend/base.html' %}
+
+{% block content %}
+
+    <div class="orderbox">
+        <h4>Addresses</h4>
+        <table>
+            <th>Date</th>
+            <th>Order ID</th>
+            <th>Payment type</th>
+            <th>Status</th>
+
+            {% for object in object_list %}
+                <tr>
+                    <td>{{ object.date_ordered }}</td>
+                    <td>{{ object.id }}</td>
+                    <td>{{ object.payment_type }}</td>
+                    <td>{{ object.complete }}</td>
+                </tr>
+            {% empty %}
+                <p>No orders yet</p>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}

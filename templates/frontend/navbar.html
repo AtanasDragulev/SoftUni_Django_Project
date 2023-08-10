@@ -18,8 +18,24 @@
                 <li class="nav-item"><a class="nav-link" href="{% url 'login_user' %}">Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'register_user' %}">Register</a></li>
             {% else %}
-                <li class="nav-item"><a class="nav-link" href="{% url 'profile_details' pk=user.pk %}">Profile</a>
-                </li>
+{#                <li class="nav-item"><a class="nav-link" href="{% url 'profile_details' pk=user.pk %}">Profile</a>#}
+{#                </li>#}
+                <div class="nav-item dropdown">
+                    <div class="dropbtn"><a href="#">Profile</a>
+                        <div class="dropdown-options">
+                            <div class="nav-item">
+                                <a class="nav-link" href="{% url 'profile_details' pk=user.pk %}">Details</a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a>
+                            </div>
+                            <div class="nav-item">
+                                <a class="nav-link" href="{% url 'profile_orders'%}">Orders</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
                 <li class="nav-item"><a class="nav-link" href="{% url 'logout_user' %}">Logout</a></li>
             {% endif %}
             {% if request.user|in_group:'Staff' %}

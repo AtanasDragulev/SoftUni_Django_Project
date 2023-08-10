@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views.decorators.cache import cache_page
 from django.views.generic import DeleteView, FormView
 from django.views.generic.base import TemplateView
 
@@ -13,6 +14,7 @@ from online_store.tools.access_control import AccessRequiredMixin, group_require
 from ..core.models import Category, Product, ProductAttribute, ProductLike, Wishlist
 from online_store.tools.functions import get_attribute_filters
 from ..inventory.models import Inventory
+from django.core.cache import cache
 
 main_categories = Category.objects.filter(parent_category__isnull=True)
 
@@ -27,15 +29,15 @@ class Index(TemplateView):
         return context
 
 
-class CategoryProductsView(TemplateView):
-    template_name = 'frontend/catalogue/category_products.html'
-
-    def get_context_data(self, category_name, **kwargs):
-        context = super().get_context_data(**kwargs)
-        category = Category.objects.get(name=category_name)
-        products = Product.objects.filter(category=category, active=True)
-        context.update({'category': category, 'products': products, })
-        return context
+# class CategoryProductsView(TemplateView):
+#     template_name = 'frontend/catalogue/category_products.html'
+#
+#     def get_context_data(self, category_name, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         category = Category.objects.get(name=category_name)
+#         products = Product.objects.filter(category=category, active=True)
+#         context.update({'category': category, 'products': products, })
+#         return context
 
 
 @login_required
@@ -150,8 +152,14 @@ class SearchResultsView(FormView):
 
 def products_by_category(request, category_name):
     category = Category.objects.get(name=category_name)
-    products = Product.objects.filter(category=category, active=True)
-    attributes = ProductAttribute.objects.filter(product__category=category).order_by('product__modified_at')
+
+    cached_data = cache.get("products_by_category")
+    if cached_data is None:
+        cached_data = Product.objects.all()
+        cache.set("products_by_category", cached_data, timeout=15 * 60)
+
+    products = cached_data.filter(category=category, active=True).order_by('-modified_at')
+    attributes = ProductAttribute.objects.filter(product__category=category)
     attribute_groups = get_attribute_filters(attributes)
     paginator = Paginator(products, 10)
     page_number = request.GET.get("page")
@@ -187,10 +195,7 @@ def products_by_category(request, category_name):
 def like_product(request, slug):
     product = Product.objects.get(slug=slug)
 
-    kwargs = {
-        'product': product,
-        'user': request.user
-    }
+    kwargs = {'product': product, 'user': request.user}
 
     liked = ProductLike.objects \
         .filter(**kwargs) \
@@ -208,12 +213,7 @@ def like_product(request, slug):
 @login_required
 def add_wishlist(request, slug):
     product = Product.objects.get(slug=slug)
-
-    kwargs = {
-        'product': product,
-        'user': request.user
-    }
-
+    kwargs = {'product': product, 'user': request.user}
     wished = Wishlist.objects \
         .filter(**kwargs) \
         .first()

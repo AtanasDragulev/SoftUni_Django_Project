@@ -20,12 +20,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qz004^v4ht6k6(k%*%k0^5*mm+s*%*$co76&sbkvw(mj#1vt37'
+SECRET_KEY = os.getenv('SECRET_KEY', None)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(int(os.getenv('DEBUG', 0)))
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(' ')
 
 # Application definition
 
@@ -95,6 +96,13 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": "db.sqlite3",
+#     }
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -158,3 +166,11 @@ EMAIL_USE_TLS = bool(int(os.getenv('SMTP_USE_TLS', 0)))
 EMAIL_PORT = os.getenv('SMTP_PORT', None)
 EMAIL_HOST_USER = os.getenv('SMTP_USER', None)
 EMAIL_HOST_PASSWORD = os.getenv('SMTP_PASSWORD', None)
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        'LOCATION': os.getenv('REDIS_CACHE_LOCATION'),
+
+    }
+}

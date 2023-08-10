@@ -33,16 +33,12 @@
     visibility: hidden;
 }
 
-.details-page {
-    display: flex;
-    flex-direction: row;
-}
 
 .profile {
     background: white;
     width: 500px;
     border-radius: 6px;
-    margin: 0 auto 0 30%;
+    margin: 0 auto 0 40%;
     padding: 30px 0 30px 0;
     border: #2980b9 4px solid;
     display: flex;
@@ -56,8 +52,8 @@
     background: white;
     width: 500px;
     border-radius: 6px;
-    margin: 0 30% 0 0;
-    padding: 20px 0 30px 0;
+    margin: 0 auto 0 40%;
+    padding: 30px 0 30px 0;
     border: #2980b9 4px solid;
     display: flex;
     flex-direction: column;
@@ -70,11 +66,10 @@
     background: white;
     width: 90%;
     height: 50%;
-    border-radius: 6px;
     margin: 40px auto 0 auto;
-    padding: 20px 0 30px 0;
-    border: #2980b9 4px solid;
-    display: inline-flex;
+    padding: 20px 20px 40px 20px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .wish-card {
@@ -90,4 +85,24 @@
     flex-direction: column;
     align-items: center;
 
+
+}
+
+
+.orderbox {
+    height: 45%;
+    background-color: lightgrey;
+    border-radius: 30px;
+    margin-left: 30%;
+    margin-top: 5%;
+    padding: 20px 10% 30px 10%;
+    width: 18%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.orderbox table {
+    width: 150%;
+    text-align: center;
 }

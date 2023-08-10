@@ -1,3 +1,4 @@
+from django.views.decorators.cache import cache_control
 from online_store.apps.core.models import Category
 from .forms import SearchForm
 

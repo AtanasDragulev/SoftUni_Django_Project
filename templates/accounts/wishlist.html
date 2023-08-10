@@ -1,0 +1,18 @@
+{% extends 'frontend/base.html' %}
+
+{% block content %}
+    <center><h2>Wishlist</h2></center>
+    <div class="profile-wishlist">
+        {% for product in object_list %}
+            <div class="wish-card">
+                <a href="{% url 'product_details' product.product.slug %}">
+                    <img src="{{ product.product.image.url }}" width="130" height="130">
+                    <div>{{ product.product.name }}</div>
+                </a>
+            </div>
+        {% empty %}
+            <p>No products in wishlist</p>
+        {% endfor %}
+
+    </div>
+{% endblock %}

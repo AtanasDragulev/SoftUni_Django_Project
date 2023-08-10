@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 from .views import RegisterUserView, LoginUserView, LogoutUserView, ProfileDetails, ProfileEdit, \
-    AddAdressView, DeleteAddressView
+    AddAdressView, DeleteAddressView, WishlistView, OrdersView
 
 urlpatterns = (
     path('register/', RegisterUserView.as_view(), name='register_user'),
@@ -12,5 +12,7 @@ urlpatterns = (
         path("edit/<int:pk>", ProfileEdit.as_view(), name="edit_profile"),
         path("add_address/", AddAdressView.as_view(), name="add_address"),
         path("delete_address/<int:pk>", DeleteAddressView.as_view(), name='delete_adress'),
+        path("wishlist/", WishlistView.as_view(), name="wishlist"),
+        path("orders/", OrdersView.as_view(), name="profile_orders"),
     ]))
 )

@@ -1,7 +1,7 @@
 {% extends 'frontend/base.html' %}
 
 {% block content %}
-    <div class="details-page">
+
         <div class="profile">
             <h4>User details</h4>
             <div>First Name: {{ object.first_name }}</div>
@@ -28,21 +28,6 @@
             </div>
         </div>
 
-    </div>
-        <div class="profile-wishlist">
-            <div><h4>Wishlist</h4></div>
 
-            {% for product in wishlist %}
-                <div class="wish-card">
-                <a href="{% url 'product_details' product.product.slug %}">
-                    <img src="{{ product.product.image.url }}" width="130" height="130">
-                    <div>{{ product.product.name }}</div>
-                </a>
-                </div>
-            {% empty %}
-                <p>No products in wishlist</p>
-            {% endfor %}
-
-        </div>
 
 {% endblock %}
