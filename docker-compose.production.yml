@@ -1,0 +1,59 @@
+version: '3.4'
+
+services:
+
+  web:
+    image: "snagals/online_store:latest"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: gunicorn online_store.wsgi:application --bind=0.0.0.0:8000
+    platform: linux/amd64
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./envs/.env
+    depends_on:
+      - postgres
+      - cache
+    links:
+      - postgres
+      - cache
+    volumes:
+      - ./static_files:/tmp/online_stores/static
+      - ./media_files:/tmp/online_store/media
+
+
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres_user
+      POSTGRES_DB: online_store
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./postgresql:/var/lib/postgresql/data
+
+  cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /tmp/online_store/static:/home/app/web/static_files/
+      - /tmp/online_store/media:/home/app/web/media_files/
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/logs:/var/log/nginx
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+    links:
+      - web

@@ -24,7 +24,7 @@ class Order(models.Model):
     @property
     def get_items(self):
         orderitems = self.orderitem_set.all()
-        total = sum([item.quantity for item in orderitems])
+        total = len(orderitems)
         return total
 
 

@@ -22,7 +22,7 @@ class ProductCreationForm(forms.Form):
         self.fields['brand'] = forms.ModelChoiceField(label='Brand', queryset=Brand.objects.all())
         self.fields['category'] = forms.CharField(label='Category', disabled=True, initial=category.name)
         self.fields['image'] = forms.ImageField(label='Product Image', validators=(validate_image_size,))
-        self.fields['description'] = forms.CharField(label='Product Description')
+        self.fields['description'] = forms.CharField(widget=forms.Textarea, label='Product Description')
         self.fields['price'] = forms.DecimalField(
             label='Product Price', validators=(
                 MinValueValidator(0.1, message="Product price cannot be negative or zero"),)

@@ -8,6 +8,8 @@
             <th>Date</th>
             <th>Order ID</th>
             <th>Payment type</th>
+            <th>Items</th>
+            <th>Ammount</th>
             <th>Status</th>
 
             {% for object in object_list %}
@@ -15,7 +17,9 @@
                     <td>{{ object.date_ordered }}</td>
                     <td>{{ object.id }}</td>
                     <td>{{ object.payment_type }}</td>
-                    <td>{{ object.complete }}</td>
+                    <td>{{ object.get_items }}</td>
+                    <td>{{ object.get_total }}</td>
+                    <td>{% if object.complete %}Completed{% else %}Pending{% endif %} </td>
                 </tr>
             {% empty %}
                 <p>No orders yet</p>

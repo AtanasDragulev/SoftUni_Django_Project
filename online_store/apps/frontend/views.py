@@ -145,7 +145,7 @@ class SearchResultsView(FormView):
 
     def form_valid(self, form):
         query = form.cleaned_data['query']
-        results = self.model.objects.filter(title__icontains=query)
+        results = self.model.objects.filter(title__icontains=query, active=True)
         context = self.get_context_data(form=form, results=results)
         return self.render_to_response(context)
 
@@ -158,8 +158,8 @@ def products_by_category(request, category_name):
         cached_data = Product.objects.all()
         cache.set("products_by_category", cached_data, timeout=15 * 60)
 
-    products = cached_data.filter(category=category, active=True).order_by('-modified_at')
-    attributes = ProductAttribute.objects.filter(product__category=category)
+    products = cached_data.filter(category=category, active=True, quantity__gt=0).order_by('-modified_at')
+    attributes = ProductAttribute.objects.filter(product__category=category, product__active=True)
     attribute_groups = get_attribute_filters(attributes)
     paginator = Paginator(products, 10)
     page_number = request.GET.get("page")
