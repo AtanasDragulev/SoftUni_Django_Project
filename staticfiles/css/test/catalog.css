@@ -1,0 +1,194 @@
+.category-title {
+    text-align: center;
+
+}
+
+.card-box {
+    box-shadow: 0 0 30px 0;
+    padding: 20px;
+    margin-left: 90px;
+    background-position: right 35% bottom 45%;
+    box-sizing: border-box;
+    border-radius: 25px;
+    float: left;
+    height: 510px;
+    color: grey;
+    font-weight: bold;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+.btn-group > a {
+	width: 50%;
+	height: 50px;
+	cursor: pointer;
+	border: none;
+    border-radius: 10px;
+	display: inline;
+	align-items: center;
+	justify-content: center;
+	background-color: #1b2845;
+	background-image: linear-gradient(315deg, #45a29e 0%, #0d324d 74%);
+	background-size: 200% 100%;
+	background-position: left;
+	background-repeat: no-repeat;
+	transition: 500ms;
+    color: white;
+    font-family: "Lato", serif;
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.btn-group > a:hover {
+	background-position: right;
+}
+
+.btn-group > a:before {
+	color: rgba(255,255,255,0.5);
+	font-size: 16px;
+    font-weight: bold;
+    font-family: 'Lato', serif;
+	position: absolute;
+	display: inline;
+	align-items: center;
+	justify-content: center;
+	width: 140px;
+	height: 40px;
+	background-color: #1b2845;
+	background-image: linear-gradient(315deg, #284 0%, #ffc10774 74%);
+	transition: 500ms;
+}
+
+.btn-group > .btn {
+	width: 50%;
+	height: 50px;
+	cursor: pointer;
+	border: none;
+    border-radius: 10px;
+	display: inline;
+	align-items: center;
+	justify-content: center;
+	background-color: #1b2845;
+	background-image: linear-gradient(315deg, #45a29e 0%, #ffc10774 74%);
+	background-size: 200% 100%;
+	background-position: left;
+	background-repeat: no-repeat;
+	transition: 500ms;
+    color: white;
+    font-family: "Lato", serif;
+    font-size: 20px;
+    margin-bottom: 10px;
+
+    padding: 10px;
+    text-decoration: none;
+}
+
+.btn-group > .btn:hover {
+	background-position: right;
+}
+
+.btn-group > .btn:before {
+	color: rgba(255,255,255,0.5);
+	font-size: 16px;
+    font-weight: bold;
+    font-family: 'Lato', serif;
+	position: absolute;
+	display: inline;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	background-color: #1b2845;
+	background-image: linear-gradient(315deg, #1b2845 0%, #274060 74%);
+	transition: 500ms;
+}
+
+
+#catalogPage h1{
+    color: white;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 26px;
+    font-family: 'Lato', serif;
+    text-shadow: 5px 2px black;
+}
+
+.card-box > img {
+    display: block;
+    width: 250px;
+    border-radius: 15px;
+
+}
+
+.btn-group {
+    margin: 20px auto 0;
+}
+
+#catalogPage > p {
+    font-size: 40px;
+    color: #45a29e;
+    font-weight: bolder;
+    text-align: center;
+    margin-top: 30px;
+    text-shadow: 2px 2px black solid;
+}
+
+
+
+input[type=text]:hover {
+    border-color: #4e5966;
+}
+
+
+
+.button-list {
+    width: 150px;
+	height: 50px;
+	cursor: pointer;
+	border: none;
+  border-radius: 10px;
+	display: inline;
+	align-items: center;
+	justify-content: center;
+	background-color: #1b2845;
+	background-image: linear-gradient(315deg, #45a29e 0%, #0d324d 74%);
+	background-size: 200% 100%;
+	background-position: left;
+	background-repeat: no-repeat;
+	transition: 500ms;
+  color: white;
+    font-family: "Lato", serif;
+  font-size: 20px;
+  margin-bottom: 5px;
+  margin-top: 20px;
+}
+
+
+
+
+#content {
+    margin-top: 0;
+    padding: 10px;
+    display: flex;
+}
+
+#content #sidebar {
+    width: 180px;
+    padding: 10px;
+    flex: 0 0 auto;
+}
+
+#content #products {
+    background-color: orange;
+    flex-grow: 2;
+    margin-left: 20px;
+    padding: 10px;
+}
+
+.pagination {
+    padding-bottom: 10px;
+    text-align: center;
+}

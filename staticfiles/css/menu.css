@@ -1,0 +1,71 @@
+
+.dropdown {
+    display: inline-block;
+    position: relative;
+}
+
+nav button {
+    border: none;
+    border-radius: 5px;
+    padding: 16px 50px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+nav button:hover {
+    background-color: #ddd;
+}
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    overflow: auto;
+    background-color: #0a4e7f;
+    border-radius: 5px;
+    box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown:hover .dropdown-options {
+    display: block;
+}
+
+.dropdown:hover #category-name {
+    display: block;
+    color: #f37020;
+    padding: 15px 50px;
+    font-size: 18px
+}
+
+.dropdown-options #category-name:hover {
+    color: #0a0a23;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.dropdown-options a {
+    display: block;
+    color: #ddd;
+    padding: 5px;
+    text-decoration: none;
+    padding: 5px 30px;
+    font-size: 18px;
+}
+
+.dropdown-options a:hover {
+    color: #f37020;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+
+.dropdown-options .subcategories {
+    display: none;
+}
+
+/* Add the following styles to show the subcategories when the parent has the 'active' class */
+.dropdown-options.active .subcategories {
+    display: block;
+}
+
+.dropdown-options .subcategories.active {
+    display: block;
+}

@@ -1,0 +1,18 @@
+html {
+    font-family: 'Lato', serif;
+    font-size: 16px;
+    box-sizing: border-box;
+
+}
+
+body {
+    background-color: white;
+}
+*,
+*::before,
+*::after {
+    /*margin: 0 auto;*/
+    padding: 0;
+    box-sizing: inherit;
+    line-height: 1.3;
+}

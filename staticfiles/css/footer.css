@@ -1,0 +1,35 @@
+footer {
+    background-color: #0a4e7f;
+    width: 99%;
+    height: 50px;
+    display: flex;
+    font-size: 16px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px 0 3px;
+    margin: 0;
+    color: white;
+    position: relative;
+    bottom: 0;
+
+}
+
+
+/* Styles for the left section of the footer */
+.footer-left {
+    flex: 1;
+}
+
+/* Styles for the right section of the footer */
+.footer-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Adjust the size of the social media icons as needed */
+.footer-right img {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+}
