@@ -20,8 +20,9 @@ services:
       - postgres
       - cache
     volumes:
-      - ./static_files:/tmp/online_stores/static
-      - ./media_files:/tmp/online_store/media
+      - ./static_files:/home/app/web/static_files/
+      - ./media_files:/home/app/web/media_files/
+
 
 
   postgres:
