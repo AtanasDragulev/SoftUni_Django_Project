@@ -7,7 +7,7 @@ from django.views import generic as views
 
 from online_store.apps.accounts.forms import RegisterUserForm, AddAddressForm
 from online_store.apps.accounts.models import Profile, Address
-from online_store.apps.core.models import Wishlist, Product
+from online_store.apps.core.models import Wishlist
 from online_store.apps.sales.models import Order
 
 UserModel = get_user_model()
@@ -78,8 +78,6 @@ class AddAdressView(LoginRequiredMixin, views.CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.pk != self.object.pk:
-            raise PermissionDenied
         return context
 
 

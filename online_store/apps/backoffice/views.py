@@ -181,6 +181,8 @@ class ProductManagementView(AccessRequiredMixin, views.ListView):
     REQUIRED_GROUP = "Staff"
     model = Product
     template_name = 'backoffice/product/product_management.html'
+    paginate_by = 15
+    ordering = ['pk']
 
 
 class CreateProductView(AccessRequiredMixin, views.CreateView):

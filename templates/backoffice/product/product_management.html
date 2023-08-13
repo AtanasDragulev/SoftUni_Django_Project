@@ -22,17 +22,19 @@
     <table>
 
         <div class="cart-row">
+            <div style="flex:1"><strong>ID</strong></div>
             <div style="flex:1"><strong>BRAND</strong></div>
-            <div style="flex:2"><strong>NAME</strong></div>
+            <div style="flex:1"><strong>NAME</strong></div>
             <div style="flex:1"><strong>PRICE</strong></div>
             <div style="flex:1"><strong>QUANTITY</strong></div>
             <div style="flex:1"><strong>ACTIVE</strong></div>
             <div style="flex:1"><strong>ACTION</strong></div>
         </div>
-        {% for product in object_list %}
+        {% for product in page_obj %}
             <div class="cart-row user-row">
+                <div style="flex:1"><p>{{ product.pk }}</p></div>
                 <div style="flex:1"><p>{{ product.brand }}</p></div>
-                <div style="flex:2"><p>{{ product.name }}</p></div>
+                <div style="flex:1"><p>{{ product.name }}</p></div>
                 <div style="flex:1"><p>{{ product.price }}</p></div>
                 <div style="flex:1"><p>{{ product.quantity }}</p></div>
                 <div style="flex:1"><p>{{ product.active }}</p></div>
@@ -47,6 +49,25 @@
             <h3>No products</h3>
         {% endfor %}
     </table>
+
+    <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+    </div>
+
 
     <script>
         $(document).ready(function () {
