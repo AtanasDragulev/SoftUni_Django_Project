@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.decorators.cache import cache_page
+
 from django.views.generic import DeleteView, FormView
 from django.views.generic.base import TemplateView
 
@@ -27,17 +27,6 @@ class Index(TemplateView):
         search_form = SearchForm
         context.update({'search_form': search_form})
         return context
-
-
-# class CategoryProductsView(TemplateView):
-#     template_name = 'frontend/catalogue/category_products.html'
-#
-#     def get_context_data(self, category_name, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         category = Category.objects.get(name=category_name)
-#         products = Product.objects.filter(category=category, active=True)
-#         context.update({'category': category, 'products': products, })
-#         return context
 
 
 @login_required
@@ -80,15 +69,22 @@ class ProductDetailView(TemplateView):
         context = super().get_context_data(**kwargs)
         product = get_object_or_404(Product, slug=slug)
         attributes = product.productattribute_set.all()
-        liked = ProductLike.objects.filter(product=product, user=self.request.user).exists()
-        wished = Wishlist.objects.filter(product=product, user=self.request.user).exists()
+
+        if self.request.user.is_authenticated:
+            liked = ProductLike.objects.filter(product=product, user=self.request.user).exists()
+            wished = Wishlist.objects.filter(product=product, user=self.request.user).exists()
+            context.update(
+                {
+                    'liked': liked,
+                    'wished': wished,
+                }
+            )
+
         total_likes = product.productlike_set.count()
         context.update(
             {'product': product,
              'attributes': attributes,
              'total_likes': total_likes,
-             'liked': liked,
-             'wished': wished,
              }
         )
         return context
